@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.AddBookActivity">
+
+    <include
+        layout="@layout/actionbar"
+        android:id="@+id/activity_add_book_actionbar" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <EditText
+            android:id="@+id/activity_add_book_et_bookName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="50dp"
+            android:background="@drawable/edittext_bg"
+            android:inputType="textPersonName"
+            android:hint="@string/book_name"
+            android:padding="10dp" />
+
+        <EditText
+            android:id="@+id/activity_add_book_et_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_add_book_et_bookName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_bg"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="@string/author"
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/activity_add_book_btn_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/activity_add_book_et_author"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:text="@string/add_book"
+            android:textAllCaps="false" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

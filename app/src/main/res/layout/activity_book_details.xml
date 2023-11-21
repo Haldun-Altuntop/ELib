@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.bookdetails.BookDetailsActivity">
+
+    <include
+        layout="@layout/actionbar"
+        android:id="@+id/activity_book_details_actionbar" />
+
+    <TextView
+        android:id="@+id/activity_book_details_tv_bookid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_book_details_actionbar"
+        android:text="@string/book_id"
+        android:textSize="15sp"
+        android:textColor="@color/teal_200"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp" />
+
+    <EditText
+        android:id="@+id/activity_book_details_et_bookid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_below="@id/activity_book_details_tv_bookid"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/activity_book_details_tv_bookname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_book_details_et_bookid"
+        android:text="@string/book_name"
+        android:textSize="15sp"
+        android:textColor="@color/teal_200"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp" />
+
+    <EditText
+        android:id="@+id/activity_book_details_et_bookname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_below="@id/activity_book_details_tv_bookname"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/activity_book_details_tv_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:layout_below="@id/activity_book_details_et_bookname"
+        android:text="@string/author"
+        android:textSize="15sp"
+        android:textColor="@color/teal_200"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp" />
+
+    <EditText
+        android:id="@+id/activity_book_details_et_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_below="@id/activity_book_details_tv_author"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/activity_book_details_tv_owner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        android:layout_below="@id/activity_book_details_et_author"
+        android:text="@string/added_by"
+        android:textSize="15sp"
+        android:textColor="@color/teal_200"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp" />
+
+    <EditText
+        android:id="@+id/activity_book_details_et_owner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_below="@id/activity_book_details_tv_owner"
+        android:layout_marginTop="5dp" />
+
+    <TextView
+        android:id="@+id/activity_book_details_tv_availability"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="debug"
+        android:layout_below="@id/activity_book_details_et_owner"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/activity_book_details_et_owner"
+        android:visibility="gone" >
+
+        <Button
+            android:id="@+id/activity_book_details_btn_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/save" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

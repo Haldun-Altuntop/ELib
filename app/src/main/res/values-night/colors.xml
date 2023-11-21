@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="buttonPressed">#333333</color>
+    <color name="buttonNormal">#292929</color>
+    <color name="buttonDisabled">#925A5A5A</color>
+    <color name="statusBarColor">#0C0C0C</color>
+    <color name="edittext">#454545</color>
+    <color name="card_background">#424242</color>
+</resources>

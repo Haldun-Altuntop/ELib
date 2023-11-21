@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/dialog_layout_set_email_tv_tittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/prompt_email"
+        android:textSize="20sp"
+        android:textColor="#2BF1DD" />
+
+    <EditText
+        android:id="@+id/dialog_layout_set_email_et_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/prompt_email"
+        android:layout_below="@id/dialog_layout_set_email_tv_tittle"
+        android:layout_marginTop="25dp"
+        android:inputType="textEmailAddress"
+        android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
+    <EditText
+        android:id="@+id/dialog_layout_set_email_et_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:layout_below="@id/dialog_layout_set_email_et_email"
+        android:layout_marginTop="25dp"
+        android:theme="@style/Theme.AppCompat.NoActionBar"/>
+
+</RelativeLayout>

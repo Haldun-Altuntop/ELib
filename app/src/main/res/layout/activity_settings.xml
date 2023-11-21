@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".settings.SettingsActivity">
+
+    <include
+        layout="@layout/actionbar"
+        android:id="@+id/activity_settings_actionbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/activity_settings_actionbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:text="@string/account_settings"
+                android:textColor="@color/teal_200"
+                android:padding="10dp" />
+
+            <arc.haldun.mylibrary.views.CardItem
+                android:id="@+id/activity_settings_item_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tittle="@string/account"
+                app:subTitle="Haldun Altuntop"
+                app:showIcon="false" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/language_and_input"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/teal_200"
+                android:padding="10dp" />
+
+            <arc.haldun.mylibrary.views.CardItem
+                android:id="@+id/activity_settings_item_language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tittle="@string/language"
+                app:subTitle="Türkçe" />
+
+            <arc.haldun.mylibrary.views.CardItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tittle="@string/theme"
+                app:subTitle="@string/not_supported_yet" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/book"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/teal_200"
+                android:padding="10dp" />
+
+            <arc.haldun.mylibrary.views.CardItem
+                android:id="@+id/activity_settings_item_sorting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tittle="@string/sort"
+                app:subTitle="@string/old_to_new"
+                app:showIcon="false" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
+
+<!-- <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <arc.haldun.mylibrary.views.ViewSettingItem
+                android:id="@+id/activity_settings_card_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tittle="@string/language"
+                app:sub_title="@string/language" />
+
+            <arc.haldun.mylibrary.views.ViewSettingItem
+                android:id="@+id/activity_settings_card_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tittle="@string/account_settings"
+                app:sub_title="@string/account"
+                android:layout_below="@id/activity_settings_card_language"/>
+
+            <arc.haldun.mylibrary.views.ViewSettingItem
+                android:id="@+id/activity_settings_card_sorting_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tittle="@string/sort"
+                app:sub_title="@string/sort"
+                android:layout_below="@id/activity_settings_card_account"/>
+
+
+        </RelativeLayout>-->

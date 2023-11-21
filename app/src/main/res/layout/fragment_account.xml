@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.profile.AccountFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/account_fragment_tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_name"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp" />
+
+            <EditText
+                android:id="@+id/account_fragment_et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_below="@id/account_fragment_tv_username"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/account_fragment_tv_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prompt_email"
+                android:layout_below="@id/account_fragment_et_username"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp" />
+
+            <EditText
+                android:id="@+id/account_fragment_et_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:layout_below="@id/account_fragment_tv_email"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp" />
+
+            <TextView
+                android:id="@+id/account_fragment_tv_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password"
+                android:layout_below="@id/account_fragment_et_email"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp" />
+
+            <EditText
+                android:id="@+id/account_fragment_et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/account_fragment_tv_password"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp" />
+
+            <Button
+                android:id="@+id/account_fragment_btn_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/save"
+                android:textAllCaps="false"
+                android:layout_below="@id/account_fragment_et_password"
+                android:layout_marginTop="10dp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "582891323029",
+    "firebase_url": "https://e-lib-ef964-default-rtdb.firebaseio.com",
+    "project_id": "e-lib-ef964",
+    "storage_bucket": "e-lib-ef964.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582891323029:android:783df09a4e71ccbc53a59c",
+        "android_client_info": {
+          "package_name": "arc.haldun.mylibrary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582891323029-gnk49bqkkhdql1mbeuml4e18v0alvc4j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "arc.haldun.mylibrary",
+            "certificate_hash": "e8af9cc720988f3e8159b80750ae5b80a8bd47ab"
+          }
+        },
+        {
+          "client_id": "582891323029-5m0dnl5ic60b27aajd38c4blef9vrnc0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI7i6onenzhljcw_zaMGi_g3RfPt_cpmU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582891323029-5m0dnl5ic60b27aajd38c4blef9vrnc0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

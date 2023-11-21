@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">E-Kütüp</string>
+    <string name="user_name">Kullanıcı Adı</string>
+    <string name="password">Şifre</string>
+    <string name="dont_have_an_account">Hesabınız yok mu?</string>
+    <string name="register">Kaydol</string>
+    <string name="login">Giriş Yap</string>
+    <string name="welcome">Hoşgeldin %s</string>
+    <string name="add">Ekle</string>
+    <string name="book_name">Kitap Adı</string>
+    <string name="author">Yazar</string>
+    <string name="book_successfully_added">Kitap başarıyla eklendi!</string>
+    <string name="book_could_not_add">Kitap eklenemedi! Bağlantınızı kontrol edin.</string>
+    <string name="register_failed_check_your_connection">Kayıt başarısız! Bağlantınızı kontrol edin.</string>
+    <string name="register_succeed">Kayıt başarılı!</string>
+    <string name="successfully_logged_in">Giriş başarılı!</string>
+    <string name="login_failed_check_your_connection">Giriş başarısız! Bağlantınızı kontrol edin.</string>
+    <string name="login_failed_check_your_info">Giriş başarısız! Bilgilerinizi kontrol edin.</string>
+    <string name="please_contact_with_developer">Lütfen geliştiriciyle iletişime geçin.</string>
+    <string name="connection_error">Bağlantı hatası!</string>
+    <string name="wrong_user_info">Hatalı kullanıcı bilgisi</string>
+    <string name="remember_me">Beni hatırla</string>
+    <string name="needed_permissions_are_not_granted">Gerekli izinler verilmemiş.</string>
+    <string name="unknown_error_occurred">Bilinmeyen bir hata meydana geldi.</string>
+    <string name="new_book">Yeni kitap</string>
+    <string name="refresh">Yenile</string>
+    <string name="add_book">Kitap ekle</string>
+    <string name="logout">Çıkış yap</string>
+    <string name="not_supported_yet">Bu özellik şimdilik desteklenmiyor.</string>
+    <string name="friends">Arkadaşlar</string>
+    <string name="account">Hesap</string>
+    <string name="contribution">Katkı</string>
+    <string name="settings">Ayarlar</string>
+    <string name="restart_app">Yeniden Başlat</string>
+    <string name="language">Dil</string>
+    <string name="restart_needed__change">Değişikliklerin tam olarak uygulanabilmesi için uygulamayı yeniden başlatın</string>
+    <string name="ok">Tamam</string>
+    <string name="no_contribution">Katkı yok</string>
+    <string name="reg_date">Kayıt tarihi%s</string>
+    <string name="save">Kaydet</string>
+    <string name="book_id">Kitap ID</string>
+    <string name="added_by">Ekleyen</string>
+    <string name="comments">Comments</string>
+    <string name="details">Details</string>
+    <string name="email_or_password_cannot_be_empty">E posta veya şifre boş olamaz</string>
+    <string name="verify_password">Lütfen şifrenizi doğrulayın</string>
+    <string name="ensure_valid_email">Lütfen geçerli bir e posta  girin</string>
+    <string name="passwords_dont_match">Şifreler eşleşmiyor</string>
+    <string name="email_or_username">E posta veya kullanıcı adı</string>
+    <string name="need_email">Beni hatırlanın çalışabilmesi için e posta gerekli</string>
+    <string name="book_details">Kitap Ayrıntıları</string>
+    <string name="report_error">Hatayı bildir</string>
+    <string name="language_and_input">Diller ve Giriş</string>
+    <string name="theme">Tema</string>
+
+    <!-- Dialog Strings -->
+    <string name="account_settings">Hesap Ayarları</string>
+    <string name="update">Güncelleme</string>
+    <string name="new_version_released">Yeni sürüm yayınlandı</string>
+    <string name="cancel">İptal</string>
+    <string name="download">İndir</string>
+    <string name="account_updated">Hesap bilgileriniz güncellendi!</string>
+    <string name="do_you_agree">Onaylıyor musunuz?</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="info_cannot_change_without_any_change">Hesap bilgileri değişiklik olmadan güncellenemez</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_basic">BasicActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="prompt_email">E posta</string>
+    <string name="prompt_password">Şifre</string>
+    <string name="action_sign_in">Giriş yap veya kaydol</string>
+    <string name="action_sign_in_short">Giriş yap</string>
+    <string name="invalid_username">Geçersiz kullanıcı adı</string>
+    <string name="invalid_password">Şifre en az 6 karakter olmalı</string>
+    <string name="login_failed">"Giriş başarısız"</string>
+    <string name="book">Kitap</string>
+    <string name="sort">Sıralama</string>
+    <string name="a_to_z_book_name">A\'dan Z\'ye (Kitap Adı)</string>
+    <string name="z_to_a_book_name">Z\'den A\'ya (Kitap Adı)</string>
+    <string name="old_to_new">Eskiden Yeniye</string>
+    <string name="new_to_old">Yeniden Eskiye</string>
+    <string name="a_to_z_author_name">A\'dan Z\'ye (Yazar Adı)</string>
+    <string name="z_to_a_author_name">Z\'dan A\'ye (Yazar Adı)</string>
+</resources>
