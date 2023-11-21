@@ -5,9 +5,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.os.Message;
-
-import androidx.annotation.NonNull;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
