@@ -12,13 +12,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.FirebaseApp;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -28,15 +27,13 @@ import java.util.Locale;
 
 import arc.haldun.database.DatabaseConfig;
 import arc.haldun.database.Sorting;
-import arc.haldun.database.database.Manager;
-import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.driver.Connector;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
-import arc.haldun.mylibrary.main.LibraryActivity;
+import arc.haldun.mylibrary.exceptions.UncaughtExceptionHandler;
 import arc.haldun.mylibrary.services.FirebaseUserService;
 import arc.haldun.mylibrary.settings.SettingsActivity;
 
@@ -63,6 +60,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     HandlerThread splashScreenThread;
     Runnable rInitLanguage, rConnectDatabase, rCheckUpdates, rCheckUser, rNetwork;
     boolean hasUpdate = false;
+    boolean isConnected;
 
     public static User[] users;
 
@@ -76,7 +74,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         handlerBackground = new Handler(splashScreenThread.getLooper());
 
-        handlerBackground.post(rNetwork);
+        handlerBackground.postDelayed(rNetwork, 1000);
 
         Tools.Preferences preferencesTool = new Tools.Preferences(getSharedPreferences(
                 Tools.Preferences.NAME, Context.MODE_PRIVATE));
@@ -96,6 +94,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             e.printStackTrace();
             preferencesTool.setValue(Tools.Preferences.Keys.BOOK_SORTING_TYPE, Sorting.OLD_TO_NEW.getIndex());
         }
+
+        Thread.setDefaultUncaughtExceptionHandler(
+                new UncaughtExceptionHandler(getApplicationContext()));
 
     }
 
@@ -164,6 +165,14 @@ public class SplashScreenActivity extends AppCompatActivity {
             setProcess("Connecting database", 40);
             rConnectDatabase.run();
 
+            if (!isConnected) {
+                Tools.startErrorActivity(
+                        getApplicationContext(),
+                        new Exception("Veritabanına bağlanılamadı.")
+                );
+                return;
+            }
+
             setProcess("Checking udates", 60);
             rCheckUpdates.run();
 
@@ -196,7 +205,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         rConnectDatabase = () -> {
             try {
                 DatabaseConfig databaseConfig = DatabaseConfig.load();
-                databaseConfig.connect();
+                isConnected = databaseConfig.connect();
             } catch (IOException e) {
                 Tools.startErrorActivity(getApplicationContext(), e);
             } catch (ClassNotFoundException e) {
@@ -241,6 +250,12 @@ public class SplashScreenActivity extends AppCompatActivity {
             intLibraryActivity.putExtra("hasUpdate", hasUpdate);
             intLibraryActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
+            /**New Code**/
+            Intent intHomePageActivity = new Intent(getApplicationContext(), HomePageActivity.class);
+            intLibraryActivity.putExtra("hasUpdate", hasUpdate);
+            intLibraryActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            /**New Code**/
+
             FirebaseUserService firebaseUserService = new FirebaseUserService();
 
             if (!firebaseUserService.hasLoggedInUser()) {
@@ -266,7 +281,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (rememberMe) {
                         // Redirect to Library Activity
                         setProcess("Starting", 100);
-                        startActivity(intLibraryActivity);
+                        //startActivity(intLibraryActivity);
+
+                        Log.i("SplashScreen", "Library Activity is deprecated. Starting Home Page Activity.");
+                        startActivity(intHomePageActivity);
                     } else {
 
                         firebaseUserService.signOut();
@@ -284,7 +302,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(intWelcomeActivity);
 
                 }
-
+                
+                finish();
             });
 
         };
@@ -330,120 +349,3 @@ public class SplashScreenActivity extends AppCompatActivity {
 
      */
 }
-
-/**
- * textView.setText("Initializing language");
- *
- *         //
- *         // Init language
- *         //
- *         PreferencesTool preferencesTool = new PreferencesTool(getSharedPreferences(PreferencesTool.NAME, MODE_PRIVATE));
- *         String language = preferencesTool.getString(PreferencesTool.Keys.LANGUAGE);
- *         if (language == null || language.isEmpty() || language.equals("null")) {
- *             preferencesTool.setValue(PreferencesTool.Keys.LANGUAGE, SettingsActivity.Language.getLanguage(SettingsActivity.Language.TURKISH));
- *             language = SettingsActivity.Language.getLanguage(SettingsActivity.Language.TURKISH);
- *         }
- *         Locale locale = new Locale(language);
- *         Resources resources = getResources();
- *         Configuration configuration = resources.getConfiguration();
- *         configuration.setLocale(locale);
- *         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
- *
- *         progressBar.setProgress(20);
- *
- *         //
- *         // Init threads
- *         //
- *         threadMain = new Thread(() -> {
- *             threadNetwork.start();
- *             try {
- *                 threadNetwork.join();
- *                 progressBar.setProgress(100);
- *             } catch (InterruptedException e) {
- *                 throw new RuntimeException(e);
- *             }
- *         });
- *
- *         threadNetwork = new Thread(() -> {
- *             Looper.prepare();
- *             runOnUiThread(() -> textView.setText("Connecting to database"));
- *
- *             //
- *             // Connect database
- *             //
- *             try {
- *                 DatabaseConfig databaseConfig = DatabaseConfig.load();
- *                 databaseConfig.connect();
- *             } catch (IOException | ClassNotFoundException e) {
- *                 throw new RuntimeException(e);
- *             }
- *
- *             progressBar.setProgress(40);
- *
- *             Manager manager = new Manager(new MariaDB());
- *             SplashScreenActivity.users = manager.selectUser();
- *
- *             //
- *             // Check updates
- *             //
- *             runOnUiThread(()-> textView.setText("Checking updates"));
- *
- *             boolean hasUpdate = false;
- *
- *             try {
- *
- *                 String sql = "SELECT * FROM updates";
- *                 Statement statement = Connector.connection.createStatement();
- *                 ResultSet resultSet = statement.executeQuery(sql);
- *
- *                 while (resultSet.next()) {
- *
- *                     int versionCode = resultSet.getInt("VersionCode");
- *
- *                     if (versionCode > BuildConfig.VERSION_CODE) {
- *                         hasUpdate = true;
- *                         break;
- *                     }
- *                 }
- *             } catch (SQLException e) {
- *                 Tools.startErrorActivity(this, e);
- *             }
- *
- *             progressBar.setProgress(60);
- *
- *             //
- *             // Check user
- *             //
- *             runOnUiThread(()-> textView.setText("Checking logged in user"));
- *
- *             firebaseUser = firebaseAuth.getCurrentUser();
- *             if (firebaseUser != null) {
- *
- *                 CurrentUser.user = new MariaDB().setExceptionListener(new IDatabase.IExceptionListener() {
- *                     @Override
- *                     public void onException(Exception e) {
- *                         e.printStackTrace();
- *                     }
- *                 }).getUser(firebaseUser.getUid());
- *                 if (CurrentUser.user == null) {
- *                     firebaseAuth.signOut();
- *
- *                 } else {
- *                     runOnUiThread(() -> textView.setText("Starting"));
- *
- *                     startActivity(new Intent(SplashScreenActivity.this, LibraryActivity.class)
- *                                     .putExtra("hasUpdate", hasUpdate));
- *                 }
- *             } else {
- *                 runOnUiThread(() -> textView.setText("Welcome"));
- *
- *                 startActivity(new Intent(SplashScreenActivity.this, WelcomeActivity.class)
- *                         .putExtra("hasUpdate", hasUpdate));
- *             }
- *             progressBar.setProgress(80);
- *
- *             finish();
- *         });
- *
- *         threadMain.start();
- */

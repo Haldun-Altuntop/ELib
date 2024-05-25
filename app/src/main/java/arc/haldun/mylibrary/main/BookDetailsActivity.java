@@ -1,6 +1,5 @@
 package arc.haldun.mylibrary.main;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,8 +65,8 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         et_owner.setText(ownerName);
 
         // Check availability of book
-
         /*
+        FIXME: Book.borrowedBy()
         User borrower;
         if ((borrower = currentBook.borrowedBy()) == null) {
             tv_availability.setTextColor(Color.GREEN);
@@ -79,18 +78,6 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
          */
 
-        tv_availability.setText("Müsait");
-
-        if (CurrentUser.user.getId() == 33) {
-
-            if (currentBook.getId() == 1) {
-
-                tv_availability.setText("Alabileceğim en değerli hediye için teşekkürlerr");
-                tv_availability.setTextColor(Color.CYAN);
-
-            }
-
-        }
 
         new Thread(new Runnable() {
             @Override

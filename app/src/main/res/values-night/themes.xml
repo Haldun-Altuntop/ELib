@@ -1,9 +1,14 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
-    <style name="Theme.ELib" parent="Theme.Design.NoActionBar">
+    <style name="Theme.ELib" parent="Theme.Material3.Dark.NoActionBar">
 
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorSecondary">#03CAB7</item>
+        <item name="colorOnBackground">#E4E4E4</item>
+        <item name="colorOnSurface">#E2E2E2</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/statusBarColor</item>
+        <item name="colorPrimaryDark">@color/black</item>
         <!-- Customize your theme here. -->
 
     </style>

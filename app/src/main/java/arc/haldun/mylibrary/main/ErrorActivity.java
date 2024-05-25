@@ -2,8 +2,6 @@ package arc.haldun.mylibrary.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.FileNotFoundException;
 
 import arc.haldun.mylibrary.R;
-import arc.haldun.mylibrary.Tools;
+import arc.haldun.mylibrary.bug.BugReporter;
 
 public class ErrorActivity extends AppCompatActivity {
 
@@ -37,12 +35,25 @@ public class ErrorActivity extends AppCompatActivity {
         tv_errorMessage.setText(errorMessage);
         btn_report.setOnClickListener(this::reportError);
         btn_restart.setOnClickListener(this::restartApp);
+
+        /**
+         * Temporarily added code
+         */
+        //new DirectoryMapExtractor(this);
     }
 
     private void reportError(View view) {
 
+        runOnUiThread(() -> {
+            BugReporter bugReporter = new BugReporter(getApplicationContext(), errorMessage);
+            bugReporter.reportBug();
+        });
+
         System.err.println(errorMessage);
 
+
+
+        /*
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -61,6 +72,8 @@ public class ErrorActivity extends AppCompatActivity {
             }
         }).start();
 
+         */
+
     }
 
     private void restartApp(View view) {
@@ -77,6 +90,7 @@ public class ErrorActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+        Runtime.getRuntime().exit(0);
     }
 
     void init() {

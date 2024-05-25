@@ -11,9 +11,9 @@
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 11000,
-      "versionName": "1.10.0",
-      "outputFile": "app-release.apk"
+      "versionCode": 11006,
+      "versionName": "1.10.6",
+      "outputFile": "e-kutup-latest-release.apk"
     }
   ],
   "elementType": "File"

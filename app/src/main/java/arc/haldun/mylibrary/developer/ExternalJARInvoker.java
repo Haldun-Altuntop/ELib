@@ -2,22 +2,14 @@ package arc.haldun.mylibrary.developer;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 
 import arc.haldun.mylibrary.Tools;
-import arc.haldun.mylibrary.services.filetransfer.FileTransferService;
 import arc.haldun.mylibrary.services.filetransfer.TransferService;
 import dalvik.system.DexClassLoader;
 

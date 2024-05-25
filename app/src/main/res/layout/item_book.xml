@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="5dp"
-    app:cardBackgroundColor="#23272C">
+    app:cardBackgroundColor="@color/surface"
+    android:layout_margin="5dp"><!--23272C-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,21 +21,21 @@
                 android:id="@+id/item_book_bookname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
                 android:layout_marginLeft="3dp"
                 android:layout_marginTop="9dp"
                 android:text="@string/book_name"
-                android:textStyle="bold"
-                android:textSize="15dp"/>
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/item_book_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#AEAEAE"
                 android:text="@string/author"
-                android:textStyle="italic"
-                android:textSize="12dp"/>
+                android:textColor="#AEAEAE"
+                android:textSize="12dp"
+                android:textStyle="italic" />
 
         </LinearLayout>
 
@@ -49,16 +49,14 @@
                 android:id="@+id/item_book_btnDelete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/baseline_delete_24"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="5dp"/>
+                android:layout_marginBottom="5dp"
+                android:src="@drawable/baseline_delete_24" />
 
         </LinearLayout>
 
 
-
     </LinearLayout>
-
 
 
 </androidx.cardview.widget.CardView>

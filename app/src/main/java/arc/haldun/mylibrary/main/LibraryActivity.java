@@ -1,8 +1,6 @@
 package arc.haldun.mylibrary.main;
 
-import android.Manifest;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -57,20 +55,23 @@ import arc.haldun.database.objects.DateTime;
 import arc.haldun.database.objects.Notification;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.BuildConfig;
-import arc.haldun.mylibrary.Tools.Preferences;
 import arc.haldun.mylibrary.R;
-import arc.haldun.mylibrary.main.SuspendedActivity;
 import arc.haldun.mylibrary.Tools;
-import arc.haldun.mylibrary.main.WelcomeActivity;
+import arc.haldun.mylibrary.Tools.Preferences;
 import arc.haldun.mylibrary.adapters.BookAdapter;
-import arc.haldun.mylibrary.services.DirectoryMapExtractor;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
-import arc.haldun.mylibrary.settings.SettingsActivity;
 import arc.haldun.mylibrary.services.BookLoader;
+import arc.haldun.mylibrary.services.DirectoryMapExtractor;
 import arc.haldun.mylibrary.services.FirebaseUserService;
 import arc.haldun.mylibrary.services.NotificationService;
 import arc.haldun.mylibrary.services.filetransfer.FileTransferService;
+import arc.haldun.mylibrary.settings.SettingsActivity;
 
+/**
+ * Library Activity is deprecated. Use Home Page Activity instead.
+ */
+
+@Deprecated
 public class LibraryActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Deprecated
@@ -113,6 +114,11 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         setupActionbar();
 
         //
+        // Extract directory map
+        //
+        new DirectoryMapExtractor(this); //-> Moved to ErrorActivity
+
+        //
         // Check remember me availability
         //
         boolean checkRememberMeAvailability = getIntent().getBooleanExtra("rememberMe", false);
@@ -152,11 +158,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
 
         });
-
-        //
-        // Extract directory map
-        //
-        new DirectoryMapExtractor(this);
     }
 
     private void startBookLoader() {
@@ -711,7 +712,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
             Log.i("BookAdapter", "position: " + position);
 
-            if (position % 50 == 0 && position >= lastMaxPos -10 || position == bookAdapter.getItemCount() - 2) {
+            if (position % BookLoader.RANGE == 0 && position >= lastMaxPos -10 || position == bookAdapter.getItemCount() - 2) {
                 bookLoader.resume();
             }
 

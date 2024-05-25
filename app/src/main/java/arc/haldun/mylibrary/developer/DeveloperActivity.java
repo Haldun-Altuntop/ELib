@@ -1,7 +1,5 @@
 package arc.haldun.mylibrary.developer;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,14 +7,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import arc.haldun.mylibrary.R;
-import arc.haldun.mylibrary.Tools;
 
 public class DeveloperActivity extends AppCompatActivity {
 
     View.OnClickListener onClickListener;
 
-    Button btn_externalJARFile;
+    Button btn_externalJARFile, btn_throwException;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +24,7 @@ public class DeveloperActivity extends AppCompatActivity {
         init();
 
         btn_externalJARFile.setOnClickListener(onClickListener);
+        btn_throwException.setOnClickListener(onClickListener);
     }
 
     private void init() {
@@ -34,6 +34,7 @@ public class DeveloperActivity extends AppCompatActivity {
         //
 
         btn_externalJARFile = findViewById(R.id.activity_developer_btn_external_jar_file);
+        btn_throwException = findViewById(R.id.activity_developer_btn_throw_exception);
 
         //
         // Listeners
@@ -64,6 +65,12 @@ public class DeveloperActivity extends AppCompatActivity {
 
                 AlertDialog dialog = dialogBuilder.create();
                 dialog.show();
+            }
+
+            if (view == btn_throwException) {
+
+                throw new RuntimeException("This exception thrown via developer activity.");
+
             }
         };
     }

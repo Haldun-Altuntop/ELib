@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:columnCount="4"
-        android:background="@color/card_background"
+
         app:useDefaultMargins="true"
         android:layout_centerInParent="true">
 
@@ -23,6 +23,15 @@
             android:textAllCaps="false"
             android:textSize="12sp"
             android:text="External JAR File" />
+
+        <Button
+            android:id="@+id/activity_developer_btn_throw_exception"
+            android:layout_height="50dp"
+            android:layout_width="95dp"
+            android:background="@drawable/button_bg"
+            android:textAllCaps="false"
+            android:textSize="12sp"
+            android:text="Throw Exception" />
 
 
     </androidx.gridlayout.widget.GridLayout>

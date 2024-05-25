@@ -7,11 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="white_2">#F9F9FA</color>
-    <color name="buttonPressed">#7D53BC</color>
-    <color name="buttonNormal">#A06AEC</color>
-    <color name="buttonDisabled">#887A58AA</color>
-    <color name="statusBarColor">@color/purple_200</color>
-    <color name="edittext">#D3D3D3</color>
-    <color name="card_background">#642D78</color>
+    <color name="background">#121212</color>
+    <color name="surface">#1D1D1D</color>
 </resources>

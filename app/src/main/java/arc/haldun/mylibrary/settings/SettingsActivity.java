@@ -3,29 +3,23 @@ package arc.haldun.mylibrary.settings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 
 import arc.haldun.database.Sorting;
 import arc.haldun.database.objects.CurrentUser;
-import arc.haldun.mylibrary.Tools.Preferences;
 import arc.haldun.mylibrary.R;
-import arc.haldun.mylibrary.views.CardItem;
-import arc.haldun.mylibrary.views.ViewSettingItem;
-import arc.haldun.mylibrary.main.SplashScreenActivity;
 import arc.haldun.mylibrary.Tools;
+import arc.haldun.mylibrary.Tools.Preferences;
+import arc.haldun.mylibrary.main.SplashScreenActivity;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
+import arc.haldun.mylibrary.views.CardItem;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener {
 

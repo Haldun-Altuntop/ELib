@@ -1,15 +1,10 @@
 package arc.haldun.mylibrary.services;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.app.Application;
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import arc.haldun.database.Sorting;
 import arc.haldun.database.database.Manager;
@@ -20,6 +15,8 @@ import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.adapters.BookAdapter;
 
 public class BookLoader {
+
+    public static final int RANGE = 500;
 
     public Book[] books;
     private final Manager manager;
@@ -48,7 +45,7 @@ public class BookLoader {
 
             Log.e("index of book", "pos: " + i);
 
-            if (i == 0 || i % 50 != 0) {
+            if (i == 0 || i % RANGE != 0) {
 
                 mainHandler.post(() -> bookAdapter.addItem(book));
 
