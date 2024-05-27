@@ -116,7 +116,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         //
         // Extract directory map
         //
-        new DirectoryMapExtractor(this); //-> Moved to ErrorActivity
+        //new DirectoryMapExtractor(this); //-> Moved to ErrorActivity
 
         //
         // Check remember me availability
@@ -194,8 +194,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         }
 
-        snackBar(); // Check is external storage manager
-
         if (firebaseUserService.hasLoggedInUser()) { // Giriş yapmış kullanıcı varsa
 
             String uid = firebaseUserService.getFirebaseUser().getUid();
@@ -230,7 +228,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             this.lastSetSorting = sorting;
         }
 
-        av();
+        //av();
     }
 
     @Override

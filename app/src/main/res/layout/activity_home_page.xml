@@ -19,67 +19,141 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
+            android:orientation="vertical">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/activity_home_page_cardview_profile"
-                android:layout_width="192dp"
-                android:layout_height="70dp"
-                app:cardCornerRadius="5dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/activity_home_page_cardview_search"
+                    android:layout_width="192dp"
+                    android:layout_height="70dp"
+                    app:cardCornerRadius="5dp">
 
-                    <ImageView
-                        android:layout_width="77dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/baseline_person_24" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Profil"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"/>
+                        <ImageView
+                            android:layout_width="77dp"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_search_24" />
 
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Ara"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"/>
 
-            </androidx.cardview.widget.CardView>
+                    </LinearLayout>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/activity_home_page_cardview_settings"
-                android:layout_width="192dp"
-                android:layout_height="70dp"
-                app:cardCornerRadius="5dp"
-                android:layout_marginStart="5dp">
+                </androidx.cardview.widget.CardView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/activity_home_page_cardview_friends"
+                    android:layout_width="192dp"
+                    android:layout_height="70dp"
+                    app:cardCornerRadius="5dp"
+                    android:layout_marginStart="5dp">
 
-                    <ImageView
-                        android:layout_width="77dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/baseline_settings_24" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Ayarlar"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"/>
+                        <ImageView
+                            android:layout_width="77dp"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_add_24" />
 
-                </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Arkadaşlar"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"/>
 
-            </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/activity_home_page_cardview_profile"
+                    android:layout_width="192dp"
+                    android:layout_height="70dp"
+                    app:cardCornerRadius="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="77dp"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_person_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Profil"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"/>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/activity_home_page_cardview_settings"
+                    android:layout_width="192dp"
+                    android:layout_height="70dp"
+                    app:cardCornerRadius="5dp"
+                    android:layout_marginStart="5dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="77dp"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/baseline_settings_24" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="Ayarlar"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"/>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
 
         </LinearLayout>
 

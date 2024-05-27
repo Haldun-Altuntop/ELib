@@ -16,6 +16,8 @@ import androidx.appcompat.widget.Toolbar;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import arc.haldun.database.database.Manager;
+import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.driver.Connector;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
@@ -32,6 +34,8 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
     TextView tv_availability;
     Button btn_save;
     Toolbar actionbar;
+
+    Manager databaseManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,13 +97,6 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         }).start();
-
-        /*
-        if (currentBook.getId() == 1) {
-            tv_availability.setTextColor(Color.YELLOW);
-            tv_availability.setText("Вы не можете читать эту книгу");
-        }
-         */
     }
 
     @Override
@@ -126,6 +123,8 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         tv_availability = findViewById(R.id.activity_book_details_tv_availability);
         btn_save = findViewById(R.id.activity_book_details_btn_save);
         actionbar = findViewById(R.id.activity_book_details_actionbar);
+
+        databaseManager = new Manager(new MariaDB());
     }
 
     private void initCurrentBook() {
@@ -143,6 +142,18 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
             currentBook.setName(name);
             currentBook.setAuthor(author);
             //currentBook.setBorrowedBy((User) new User().setName(borrower));
+
+            new Thread(() -> {
+
+                currentBook = databaseManager.getBook(id);
+
+                currentBook.increasePopularity();
+
+                databaseManager.updateBook(currentBook);
+
+            }).start();
+
+
         } else {
             Toast.makeText(this, "Kitap seçilmemiş", Toast.LENGTH_SHORT).show();
             finish();

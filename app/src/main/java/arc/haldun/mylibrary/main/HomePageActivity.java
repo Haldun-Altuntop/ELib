@@ -2,6 +2,7 @@ package arc.haldun.mylibrary.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
@@ -14,13 +15,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import arc.haldun.mylibrary.R;
+import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
 import arc.haldun.mylibrary.settings.SettingsActivity;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar actionBar;
-    private CardView cardProfile, cardSettings;
+    private CardView cardProfile, cardSettings, cardSearch, cardFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +47,14 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         cardProfile.setOnClickListener(this);
         cardSettings.setOnClickListener(this);
+        cardFriends.setOnClickListener(this);
+        cardSearch.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
 
         if (v.equals(cardProfile)) {
-
             // Prepare intent
             Intent intProfileActivity = new Intent(getApplicationContext(), ProfileActivity.class);
 
@@ -66,6 +69,18 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intSettingsActivity);
         }
 
+        if (v.equals(cardSearch)) {
+            // Prepare intent
+            Intent intLibraryActivity = new Intent(getApplicationContext(), LibraryActivity.class);
+
+            startActivity(intLibraryActivity);
+        }
+
+        if (v.equals(cardFriends)) {
+            Tools.makeText(getApplicationContext(), getString(R.string.not_supported_yet));
+            Log.e("Friends", "Arkadaşlar özelliği desteklenmiyor. Bunu düzelt.");
+        }
+
     }
 
     private void init() {
@@ -73,5 +88,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         cardProfile = findViewById(R.id.activity_home_page_cardview_profile);
         cardSettings = findViewById(R.id.activity_home_page_cardview_settings);
+        cardSearch = findViewById(R.id.activity_home_page_cardview_search);
+        cardFriends = findViewById(R.id.activity_home_page_cardview_friends);
     }
 }
