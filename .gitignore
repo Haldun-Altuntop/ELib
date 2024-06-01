@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/vcs.xml
+/app/release/e-kutup-release-.apk
