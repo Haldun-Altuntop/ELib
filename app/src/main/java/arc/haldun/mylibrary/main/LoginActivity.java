@@ -94,6 +94,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             if (!usernameOrEMail.isEmpty() && !password.isEmpty()) {
 
+                startButtonActionAnimation();
+
                 login(usernameOrEMail, password);
 
             } else {
@@ -111,6 +113,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
     private void login(String username, String password) {
 
@@ -141,6 +145,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     } else {
                         Toast.makeText(LoginActivity.this, getString(R.string.login_failed_check_your_info), Toast.LENGTH_SHORT).show();
                     }
+
+                    stopButtonActionAnimation();
                 }
             });
         } else {
@@ -168,20 +174,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 firebaseAuth.signInWithEmailAndPassword(email, password)
                                         .addOnCompleteListener(task -> {
 
-                                    startActivity(new Intent(LoginActivity.this,
-                                            LibraryActivity.class));
-                                    finish();
+                                            stopButtonActionAnimation();
+
+                                            startActivity(new Intent(LoginActivity.this,
+                                                    HomePageActivity.class));
+                                            finish();
                                 });
                             } else {
 
                                 Intent libraryIntent = new Intent(
                                         LoginActivity.this,
-                                        LibraryActivity.class);
+                                        HomePageActivity.class);
 
                                 libraryIntent.putExtra("rememberMe",
                                         preferencesTool.getBoolean(
                                                 Tools.Preferences.Keys.REMEMBER_ME));
 
+                                stopButtonActionAnimation();
                                 startActivity(libraryIntent);
                                 finish();
                             }
@@ -212,5 +221,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
         preferencesTool.setValue(Tools.Preferences.Keys.REMEMBER_ME, b);
+    }
+
+    private void startButtonActionAnimation() {
+        progressBar.setVisibility(View.VISIBLE);
+        btn_login.setText("");
+    }
+    private void stopButtonActionAnimation() {
+        progressBar.setVisibility(View.INVISIBLE);
+        btn_login.setText(getText(R.string.login));
     }
 }

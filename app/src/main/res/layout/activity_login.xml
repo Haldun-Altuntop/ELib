@@ -43,19 +43,33 @@
         android:background="@drawable/edittext_bg"
         android:padding="10dp" />
 
-    <Button
-        android:id="@+id/login_activity_btn_login"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/activity_login_layout_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/login_activity_et_password"
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/button_bg"
-        android:text="@string/login"
-        style="@style/Theme.ELib"
-        android:textAllCaps="false"
-        android:textSize="16sp"
-        android:visibility="visible" />
+        android:layout_below="@id/login_activity_et_password">
+
+        <Button
+            android:id="@+id/login_activity_btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_bg"
+            android:text="@string/login"
+            style="@style/Theme.ELib"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/login_activity_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
 
     <CheckBox
         android:id="@+id/login_activity_cb_rememberMe"
@@ -63,17 +77,7 @@
         android:layout_height="wrap_content"
         android:text="@string/remember_me"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/login_activity_btn_login"
+        android:layout_below="@id/activity_login_layout_button"
         android:layout_marginHorizontal="45dp"/>
-
-    <ProgressBar
-        android:id="@+id/login_activity_progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/login_activity_et_password"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:visibility="gone" />
 
 </RelativeLayout>

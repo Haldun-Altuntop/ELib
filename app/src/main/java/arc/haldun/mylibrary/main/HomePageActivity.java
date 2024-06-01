@@ -1,9 +1,11 @@
 package arc.haldun.mylibrary.main;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
@@ -14,15 +16,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
+import arc.haldun.mylibrary.services.FirebaseUserService;
 import arc.haldun.mylibrary.settings.SettingsActivity;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar actionBar;
-    private CardView cardProfile, cardSettings, cardSearch, cardFriends;
+    private CardView cardProfile, cardSettings, cardSearch, cardFriends, cardLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,24 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         cardSettings.setOnClickListener(this);
         cardFriends.setOnClickListener(this);
         cardSearch.setOnClickListener(this);
+        cardLogout.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (CurrentUser.user.isSuspended()) {
+            startSuspendedActivity();
+            finish();
+        }
+    }
+
+    private void startSuspendedActivity() {
+
+        startActivity(new Intent(getApplicationContext(), SuspendedActivity.class));
+
+        Toast.makeText(this, "Yasaklı kullanıcı", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -81,6 +103,27 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             Log.e("Friends", "Arkadaşlar özelliği desteklenmiyor. Bunu düzelt.");
         }
 
+        if (v.equals(cardLogout)) logout();
+    }
+
+    private void logout() {
+        Tools.Preferences preferencesTool = new Tools.Preferences(
+                getSharedPreferences(
+                        Tools.Preferences.NAME,
+                        Context.MODE_PRIVATE
+                )
+        );
+        preferencesTool.setValue(Tools.Preferences.Keys.REMEMBER_ME, false);
+
+        new FirebaseUserService().signOut();
+
+        CurrentUser.user = null;
+
+        // Prepare intent
+        Intent intWelcomeActivity = new Intent(getApplicationContext(), WelcomeActivity.class);
+        startActivity(intWelcomeActivity);
+
+        finish();
     }
 
     private void init() {
@@ -90,5 +133,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         cardSettings = findViewById(R.id.activity_home_page_cardview_settings);
         cardSearch = findViewById(R.id.activity_home_page_cardview_search);
         cardFriends = findViewById(R.id.activity_home_page_cardview_friends);
+        cardLogout = findViewById(R.id.activity_home_page_cardview_logout);
     }
 }

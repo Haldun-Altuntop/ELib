@@ -11,8 +11,8 @@ android {
         applicationId "arc.haldun.mylibrary"
         minSdk 24
         targetSdk 34
-        versionCode 11100
-        versionName "1.11.1 - b"
+        versionCode 11101
+        versionName "1.11.1 - d"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,7 +28,7 @@ android {
                 def versionName = variant.versionName
                 def versionCode = variant.versionCode
                 def flavor = variant.flavorName
-                outputFileName = "e-kutup-latest-${builtType}.apk"
+                outputFileName = "e-kutup-${builtType}-${versionName}.apk"
             }
         }
     }

@@ -184,15 +184,20 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     protected void onStart() {
         super.onStart();
 
+        /*
         if (CurrentUser.user.isSuspended()) {
 
             startActivity(new Intent(this, SuspendedActivity.class));
 
             Toast.makeText(this, "Yasaklı kullanıcı", Toast.LENGTH_LONG).show();
 
-            System.exit(0);
+            finish();
+
+            //System.exit(0);
 
         }
+
+         */
 
         if (firebaseUserService.hasLoggedInUser()) { // Giriş yapmış kullanıcı varsa
 
@@ -734,6 +739,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         databaseManager.updateUser(CurrentUser.user.setLastSeen(new DateTime()));
     }
 
+    @Deprecated
     private void snackBar() {
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(), 
