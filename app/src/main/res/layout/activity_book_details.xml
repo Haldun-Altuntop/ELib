@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.bookdetails.BookDetailsActivity">
+    tools:context=".main.BookDetailsActivity">
 
     <include
         layout="@layout/actionbar"
@@ -96,6 +96,62 @@
         android:layout_below="@id/activity_book_details_et_owner"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/activity_book_details_tv_availability">
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_publisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="publisher: " />
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_publication_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="publication year: " />
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="page: " />
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="type: " />
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_asset_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="asset number: " />
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_registration_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="reg date: " />
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_cabinet_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cabinet number: " />
+
+        <TextView
+            android:id="@+id/activity_book_details_tv_popularity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="popularity: " />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

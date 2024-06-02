@@ -27,8 +27,10 @@ import java.util.Locale;
 
 import arc.haldun.database.DatabaseConfig;
 import arc.haldun.database.Sorting;
+import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.driver.Connector;
 import arc.haldun.database.objects.CurrentUser;
+import arc.haldun.database.objects.DateTime;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
@@ -285,6 +287,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                         Log.i("SplashScreen", "Library Activity is deprecated. Starting Home Page Activity.");
                         startActivity(intHomePageActivity);
+
+                        // Update last seen
+                        CurrentUser.user.setLastSeen(new DateTime());
+                        new MariaDB().updateUser(CurrentUser.user);
                     } else {
 
                         firebaseUserService.signOut();

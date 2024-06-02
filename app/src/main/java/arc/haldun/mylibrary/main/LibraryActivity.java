@@ -131,26 +131,13 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         startBookLoader();
 
-        new Thread(() -> {
-
-            //
-            // Set last seen
-            //
-            //setLastSeen();
-
-            //
-            // Get notification
-            //
-            getNotification();
-
-        }).start();
+        //
+        // Get notification
+        //
+        new Thread(this::getNotification).start();
 
         fab_addBook.setOnClickListener(this);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-
-            Thread thread = new Thread(this::loadBooks2);
-            //thread.start();
-
 
             bookLoader.restart();
             swipeRefreshLayout.setRefreshing(false);
@@ -183,21 +170,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onStart() {
         super.onStart();
-
-        /*
-        if (CurrentUser.user.isSuspended()) {
-
-            startActivity(new Intent(this, SuspendedActivity.class));
-
-            Toast.makeText(this, "Yasaklı kullanıcı", Toast.LENGTH_LONG).show();
-
-            finish();
-
-            //System.exit(0);
-
-        }
-
-         */
 
         if (firebaseUserService.hasLoggedInUser()) { // Giriş yapmış kullanıcı varsa
 
@@ -248,14 +220,8 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         boolean rememberMe = preferencesTool.getBoolean(Tools.Preferences.Keys.REMEMBER_ME);
 
         if (!rememberMe) {
-            //firebaseAuth.signOut();
             firebaseUserService.signOut();
         }
-
-        //
-        // Set last seen
-        //
-        //setLastSeen();
     }
 
 
@@ -615,40 +581,37 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-        Thread mainThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        Thread mainThread = new Thread(() -> {
 
-                networkThread.start();
+            networkThread.start();
+            try {
+                networkThread.join();
+            } catch (InterruptedException e) {
+                Tools.startErrorActivity(LibraryActivity.this, e);
+            }
+
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(() -> {
                 try {
-                    networkThread.join();
-                } catch (InterruptedException e) {
+                    bookAdapter = new BookAdapter(LibraryActivity.this, books);
+                } catch (NullPointerException e) {
                     Tools.startErrorActivity(LibraryActivity.this, e);
                 }
 
-                Handler handler = new Handler(Looper.getMainLooper());
-                handler.post(() -> {
-                    try {
-                        bookAdapter = new BookAdapter(LibraryActivity.this, books);
-                    } catch (NullPointerException e) {
-                        Tools.startErrorActivity(LibraryActivity.this, e);
-                    }
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
 
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.item_animation_fall_down);
+                LayoutAnimationController layoutAnimationController = new LayoutAnimationController(animation);
 
-                    Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.item_animation_fall_down);
-                    LayoutAnimationController layoutAnimationController = new LayoutAnimationController(animation);
+                recyclerView.setLayoutAnimation(layoutAnimationController);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                //recyclerView.setAdapter(bookAdapter);
 
-                    recyclerView.setLayoutAnimation(layoutAnimationController);
-                    recyclerView.setLayoutManager(linearLayoutManager);
-                    //recyclerView.setAdapter(bookAdapter);
+                progressBar.setVisibility(View.GONE);
 
-                    progressBar.setVisibility(View.GONE);
-
-                    swipeRefreshLayout.setRefreshing(false);
-                });
-            }
+                swipeRefreshLayout.setRefreshing(false);
+            });
         });
 
         mainThread.start();
@@ -730,13 +693,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
                 Log.e("HaldununLogu", "Şu anda maks gittiğiniz indexten aşağıdasınız");
             }
         };
-    }
-
-    private void setLastSeen() {
-        //Intent setLastSeenIntent = new Intent(LibraryActivity.this, SetLastSeenService.class);
-        //startService(setLastSeenIntent);
-
-        databaseManager.updateUser(CurrentUser.user.setLastSeen(new DateTime()));
     }
 
     @Deprecated

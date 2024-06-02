@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
@@ -61,20 +62,20 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             public void onClick(View view) {
 
                 Intent intent = new Intent(rootActivity, BookDetailsActivity.class);
-                intent.putExtra("id", currentBook.getId());
-                intent.putExtra("name", currentBook.getName());
-                intent.putExtra("author", currentBook.getAuthor());
-                intent.putExtra("owner", currentBook.getContributor().getName());
+                intent.putExtra("id", currentBook.getId())
+                    .putExtra("name", currentBook.getName())
+                    .putExtra("author", currentBook.getAuthor())
+                    .putExtra("contributor", currentBook.getContributor().getName())
+                    .putExtra("publisher", currentBook.getPublisher())
+                    .putExtra("publication_year", currentBook.getPublicationYear())
+                    .putExtra("page", currentBook.getPage())
+                    .putExtra("type", currentBook.getType())
+                    .putExtra("asset_number", currentBook.getAssetNumber())
+                    .putExtra("registration_date", currentBook.getRegistrationDate())
+                    .putExtra("cabinet_number", currentBook.getCabinetNumber())
+                    .putExtra("popularity", currentBook.getPopularity());
 
-                /*
-                User borrower;
-                if ((borrower = currentBook.borrowedBy()) != null) {
-                    intent.putExtra("borrower", borrower.getName());
-                } else {
-                    intent.putExtra("borrower", "null");
-                }*/
-
-
+                intent.putExtra("book", currentBook);
 
                 rootActivity.startActivity(intent);
             }

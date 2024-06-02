@@ -1,6 +1,10 @@
 package arc.haldun.mylibrary.main;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -24,14 +28,18 @@ import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.DateTime;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.R;
+import arc.haldun.mylibrary.Tools;
 
 public class BookDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     Book currentBook;
-    String ownerName;
+    //String contributor;
 
     EditText et_id, et_bookname, et_author, et_owner;
-    TextView tv_availability;
+
+    TextView tv_availability, tv_publisher, tv_publicationYear, tv_page, tv_type, tv_assetNumber,
+            tv_regDate, tv_cabinetNumber, tv_popularity;
+
     Button btn_save;
     Toolbar actionbar;
 
@@ -66,7 +74,17 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         et_id.setText(String.valueOf(currentBook.getId()));
         et_bookname.setText(currentBook.getName());
         et_author.setText(currentBook.getAuthor());
-        et_owner.setText(ownerName);
+        et_owner.setText(currentBook.getContributor().getName());
+
+        tv_publisher.append(currentBook.getPublisher());
+        tv_publicationYear.append(currentBook.getPublicationYear());
+        tv_page.append(String.valueOf(currentBook.getPage()));
+        tv_type.append(currentBook.getType().getStringValue());
+        tv_assetNumber.append(currentBook.getAssetNumber());
+        tv_regDate.append(currentBook.getRegistrationDate().getDateTime());
+        tv_cabinetNumber.append(String.valueOf(currentBook.getCabinetNumber()));
+        tv_popularity.append(String.valueOf(currentBook.getPopularity()));
+
 
         // Check availability of book
         /*
@@ -82,19 +100,13 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
          */
 
+        new Thread(()->{
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String query = "INSERT INTO ViewedBookLogs (book,user,time) VALUES(" + currentBook.getId() + "," + CurrentUser.user.getId() +
-                            ",'" + new DateTime().getDateTime() + "')";
-                    Statement statement = Connector.connection.createStatement();
-                    statement.executeUpdate(query);
-
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                Thread.sleep(100);
+                databaseManager.addBookLog(currentBook, CurrentUser.user, new DateTime());
+            } catch (InterruptedException e) {
+                Log.e("BookDetailsActivity", "Kitap kaydı eklenemedi. Thread hatalıydı.");
             }
         }).start();
     }
@@ -120,9 +132,20 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         et_bookname = findViewById(R.id.activity_book_details_et_bookname);
         et_author = findViewById(R.id.activity_book_details_et_author);
         et_owner = findViewById(R.id.activity_book_details_et_owner);
+
         tv_availability = findViewById(R.id.activity_book_details_tv_availability);
+        tv_publisher = findViewById(R.id.activity_book_details_tv_publisher);
+        tv_publicationYear = findViewById(R.id.activity_book_details_tv_publication_year);
+        tv_page = findViewById(R.id.activity_book_details_tv_page);
+        tv_type = findViewById(R.id.activity_book_details_tv_type);
+        tv_assetNumber = findViewById(R.id.activity_book_details_tv_asset_number);
+        tv_regDate = findViewById(R.id.activity_book_details_tv_registration_date);
+        tv_cabinetNumber = findViewById(R.id.activity_book_details_tv_cabinet_number);
+        tv_popularity = findViewById(R.id.activity_book_details_tv_popularity);
+
         btn_save = findViewById(R.id.activity_book_details_btn_save);
         actionbar = findViewById(R.id.activity_book_details_actionbar);
+
 
         databaseManager = new Manager(new MariaDB());
     }
@@ -131,21 +154,12 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            int id = extras.getInt("id");
-            String name = extras.getString("name");
-            String author = extras.getString("author");
-            ownerName = extras.getString("owner");
-            String borrower = extras.getString("borrower");
 
-            currentBook = new Book();
-            currentBook.setId(id);
-            currentBook.setName(name);
-            currentBook.setAuthor(author);
-            //currentBook.setBorrowedBy((User) new User().setName(borrower));
+            currentBook = (Book) extras.get("book");
 
             new Thread(() -> {
 
-                currentBook = databaseManager.getBook(id);
+                // FIXME: 1.06.2024 -> popülerlik arttırılırken veritabaındaki değişkene doğrudan erişilmeli
 
                 currentBook.increasePopularity();
 
