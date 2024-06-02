@@ -114,11 +114,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         setupActionbar();
 
         //
-        // Extract directory map
-        //
-        //new DirectoryMapExtractor(this); //-> Moved to ErrorActivity
-
-        //
         // Check remember me availability
         //
         boolean checkRememberMeAvailability = getIntent().getBooleanExtra("rememberMe", false);
@@ -267,7 +262,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
                 recyclerView.setAdapter(newAdapter);
 
-                if (s.length() == 0) {
+                if (s.isEmpty()) {
                     recyclerView.setAdapter(bookAdapter);
                 }
 
@@ -303,8 +298,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 if (!new File(getFilesDir(), ".e-lib").exists()) {
-
-                    Log.e("Haldunss", "onPermisionResult");
 
                     Intent intent = new Intent(getApplicationContext(), FileTransferService.class);
                     ContextCompat.startForegroundService(getApplicationContext(), intent);
@@ -389,15 +382,12 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     private void getNotification() {
 
         NotificationService notificationService = new NotificationService(this);
-        notificationService.setOnTaskResultListener(new NotificationService.OnTaskResultListener() {
-            @Override
-            public void onTaskResult(Notification[] notifications) {
+        notificationService.setOnTaskResultListener(notifications -> {
 
-                Log.i("LibraryActivity", notifications.length + " yeni bildirim");
+            Log.i("LibraryActivity", notifications.length + " yeni bildirim");
 
-                notificationService.showAllNotifications();
+            notificationService.showAllNotifications();
 
-            }
         });
 
         notificationService.start();

@@ -60,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cardLanguage.setOnClickListener(this);
         cardAccount.setOnClickListener(this);
         cardSortBooks.setOnClickListener(this);
+        cardTheme.setOnClickListener(this);
     }
 
     @Override
@@ -87,6 +88,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cardAccount = findViewById(R.id.activity_settings_item_account);
         cardLanguage = findViewById(R.id.activity_settings_item_language);
         cardSortBooks = findViewById(R.id.activity_settings_item_sorting);
+        cardTheme = findViewById(R.id.activity_settings_item_theme);
 
         preferencesTool = new Tools.Preferences(
                 getSharedPreferences(Tools.Preferences.NAME, MODE_PRIVATE));
@@ -101,6 +103,20 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             startActivity(new Intent(SettingsActivity.this, ProfileActivity.class));
 
         if (view.equals(cardSortBooks)) showSortingOptionsDialog();
+
+        if (view.equals(cardTheme)) showThemeOptionsDialog();
+    }
+
+    private void showThemeOptionsDialog() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder
+                .setTitle("Temalar")
+                .setMessage(getString(R.string.not_supported_yet))
+                .setPositiveButton(getString(R.string.ok), null);
+
+        alertDialogBuilder.create().show();
     }
 
     private String getSortingStringValue(Sorting sorting) {
@@ -119,9 +135,22 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             case NEW_TO_OLD:
                 return getString(R.string.new_to_old);
 
+            case A_TO_Z_AUTHOR:
+                return getString(R.string.a_to_z_author_name);
+
+            case Z_TO_A_AUTHOR:
+                return getString(R.string.z_to_a_author_name);
+
+            case MORE_POPULAR:
+                return getString(R.string.more_popular);
+
+            case LESS_POPULAR:
+                return getString(R.string.less_popular);
+
             default:
                 RuntimeException exception = new RuntimeException("Geçersiz Sorting türü. A'dan Z'ye Sorting türüne ayarlanıyor.");
                 exception.printStackTrace();
+                Tools.makeText(getApplicationContext(), exception.getMessage());
                 return getString(R.string.a_to_z_book_name);
 
         }
@@ -132,9 +161,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         final int[] selectedSortingType = new int[1];
 
-        String[] options = {getString(R.string.a_to_z_book_name), getString(R.string.z_to_a_book_name),
-                getString(R.string.old_to_new), getString(R.string.new_to_old),
-                getString(R.string.a_to_z_author_name), getString(R.string.z_to_a_author_name)};
+        String[] options = {
+                getString(R.string.a_to_z_book_name),
+                getString(R.string.z_to_a_book_name),
+                getString(R.string.old_to_new),
+                getString(R.string.new_to_old),
+                getString(R.string.a_to_z_author_name),
+                getString(R.string.z_to_a_author_name),
+                getString(R.string.more_popular),
+                getString(R.string.less_popular)
+        };
 
         int currentSortingType = preferencesTool.getInt(Tools.Preferences.Keys.BOOK_SORTING_TYPE);
         selectedSortingType[0] = Sorting.valueOf(currentSortingType).getIndex();

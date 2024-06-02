@@ -54,6 +54,7 @@
                 app:subTitle="Türkçe" />
 
             <arc.haldun.mylibrary.views.CardItem
+                android:id="@+id/activity_settings_item_theme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:tittle="@string/theme"

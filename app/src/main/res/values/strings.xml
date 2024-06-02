@@ -115,12 +115,17 @@
     <string name="login_failed">"Login failed"</string>
     <string name="book">Book</string>
     <string name="sort">Sort</string>
+
+    <!-- Sorting values -->
     <string name="a_to_z_book_name">A to Z (Book Name)</string>
     <string name="z_to_a_book_name">Z to A (Book Name)</string>
     <string name="old_to_new">Old to New</string>
     <string name="new_to_old">New to Old</string>
     <string name="a_to_z_author_name">A to Z (Author Name)</string>
     <string name="z_to_a_author_name">Z to A (Author Name)</string>
+    <string name="more_popular">More Popular</string>
+    <string name="less_popular">Less Popular</string>
+
     <string name="title_activity_basic_material3">BasicActivityMaterial3</string>
 
     <string name="lorem_ipsum">
