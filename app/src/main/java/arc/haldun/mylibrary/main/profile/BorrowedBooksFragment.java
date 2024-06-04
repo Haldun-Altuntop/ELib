@@ -1,6 +1,8 @@
 package arc.haldun.mylibrary.main.profile;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.Book;
+import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.adapters.BookAdapter;
 
@@ -69,28 +73,29 @@ public class BorrowedBooksFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         init(view); // Init views
 
-        Book[] borrowedBooks;
+        if (CurrentUser.user.getBorrowedBook() != 0) {
 
-        try {
-            //borrowedBooks = CurrentUser.user.getBorrowedBooks();
-            borrowedBooks = null;
-        } catch (Exception e) {
-            borrowedBooks = null;
-        }
+            Handler handler = new Handler(Looper.getMainLooper());
 
-        if (borrowedBooks != null) {
+            new Thread(() -> {
 
-            bookAdapter = new BookAdapter(requireActivity(), borrowedBooks);
+                Book book = new MariaDB().getBook(CurrentUser.user.getBorrowedBook());
 
-            Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_fall_down);
-            LayoutAnimationController animationController = new LayoutAnimationController(animation);
+                handler.post(()-> {
+                    bookAdapter = new BookAdapter(requireActivity(), book);
 
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
-            linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+                    Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_fall_down);
+                    LayoutAnimationController animationController = new LayoutAnimationController(animation);
 
-            recyclerView.setLayoutAnimation(animationController);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setAdapter(bookAdapter);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
+                    linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+
+                    recyclerView.setLayoutAnimation(animationController);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    recyclerView.setAdapter(bookAdapter);
+                });
+
+            }).start();
 
         } else {
             Toast.makeText(requireContext(), "Ödünç alınan kitabınız yok", Toast.LENGTH_SHORT).show();

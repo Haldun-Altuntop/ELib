@@ -28,6 +28,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     Activity rootActivity;
     PositionChangeListener positionChangeListener;
 
+    /**
+     * Bu yapıcı metot tek bir kitabı listelemek için kullanılır.
+     * @param activity
+     * @param book
+     */
+    public BookAdapter(Activity activity, Book book) {
+        this.books = new ArrayList<>(Arrays.asList(book));
+        this.layoutInflater = LayoutInflater.from(activity.getApplicationContext());
+        this.rootActivity = activity;
+    }
+
     public BookAdapter(Activity activity, Book[] books) {
         this.books = new ArrayList<>(Arrays.asList(books));
         this.layoutInflater = LayoutInflater.from(activity.getApplicationContext());
@@ -55,7 +66,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
         holder.setData(currentBook);
 
-        positionChangeListener.onPositionChange(position);
+        if (positionChangeListener != null)
+            positionChangeListener.onPositionChange(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

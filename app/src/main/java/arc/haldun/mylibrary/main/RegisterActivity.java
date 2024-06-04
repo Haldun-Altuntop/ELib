@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void run() {
                             User user = new User(firebaseAuth.getUid(), username, password, email, String.valueOf(BuildConfig.VERSION_CODE), User.USER,
-                                    new DateTime(), new DateTime(), new Book[0], "");
+                                    new DateTime(), new DateTime(), 0);
 
                             Manager manager = new Manager(new MariaDB());
                             manager.addUser(user);

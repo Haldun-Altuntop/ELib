@@ -87,18 +87,21 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
 
         // Check availability of book
-        /*
-        FIXME: Book.borrowedBy()
-        User borrower;
-        if ((borrower = currentBook.borrowedBy()) == null) {
-            tv_availability.setTextColor(Color.GREEN);
-            tv_availability.setText("Müsait");
-        } else {
-            tv_availability.setTextColor(Color.RED);
-            tv_availability.setText("Bu kitabı şu an " + borrower.getName() + " okuyor");
-        }
+        if (currentBook.getBorrowedBy() != 0) {
 
-         */
+            new Thread(() -> {
+
+                User user = databaseManager.getUser(currentBook.getBorrowedBy());
+
+                new Handler(Looper.getMainLooper())
+                        .post(() -> tv_availability.setText(
+                                String.format("Bu kitap %s tarafından okunuyor", user.getName()))
+                                );
+            }).start();
+
+        } else {
+            tv_availability.setText("Müsait");
+        }
 
         new Thread(()->{
 

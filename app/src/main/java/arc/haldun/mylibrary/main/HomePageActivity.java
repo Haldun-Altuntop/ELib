@@ -16,7 +16,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Objects;
+
 import arc.haldun.database.objects.CurrentUser;
+import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
@@ -26,7 +29,7 @@ import arc.haldun.mylibrary.settings.SettingsActivity;
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar actionBar;
-    private CardView cardProfile, cardSettings, cardSearch, cardFriends, cardLogout;
+    private CardView cardProfile, cardSettings, cardSearch, cardFriends, cardLogout, cardRequests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         cardFriends.setOnClickListener(this);
         cardSearch.setOnClickListener(this);
         cardLogout.setOnClickListener(this);
+        cardRequests.setOnClickListener(this);
+
+        if (Objects.equals(CurrentUser.user.getPriority(), User.USER)) {
+            cardRequests.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -104,6 +112,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if (v.equals(cardLogout)) logout();
+
+        if (v.equals(cardRequests)) {
+            // Prepare intent
+            Intent intLibraryActivity = new Intent(getApplicationContext(), RequestsActivity.class);
+
+            startActivity(intLibraryActivity);
+        }
     }
 
     private void logout() {
@@ -134,5 +149,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         cardSearch = findViewById(R.id.activity_home_page_cardview_search);
         cardFriends = findViewById(R.id.activity_home_page_cardview_friends);
         cardLogout = findViewById(R.id.activity_home_page_cardview_logout);
+        cardRequests = findViewById(R.id.activity_home_page_cardview_requests);
     }
 }
