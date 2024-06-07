@@ -1,8 +1,6 @@
 package arc.haldun.mylibrary.developer;
 
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -73,12 +71,5 @@ public class DeveloperActivity extends AppCompatActivity {
 
             }
         };
-    }
-
-    public void makeDialog(Context context, CharSequence tittle, CharSequence message,
-                                  CharSequence buttonText,
-                                  DialogInterface.OnClickListener onClickListener) {
-
-
     }
 }

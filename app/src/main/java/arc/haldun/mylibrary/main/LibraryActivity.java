@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,7 +34,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
@@ -45,14 +42,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import arc.haldun.database.Sorting;
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
-import arc.haldun.database.objects.DateTime;
-import arc.haldun.database.objects.Notification;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
@@ -61,7 +57,6 @@ import arc.haldun.mylibrary.Tools.Preferences;
 import arc.haldun.mylibrary.adapters.BookAdapter;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
 import arc.haldun.mylibrary.services.BookLoader;
-import arc.haldun.mylibrary.services.DirectoryMapExtractor;
 import arc.haldun.mylibrary.services.FirebaseUserService;
 import arc.haldun.mylibrary.services.NotificationService;
 import arc.haldun.mylibrary.services.filetransfer.FileTransferService;
@@ -119,9 +114,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         boolean checkRememberMeAvailability = getIntent().getBooleanExtra("rememberMe", false);
         if (checkRememberMeAvailability) checkRememberMeAvailability();
 
-        //
-        // Check updates
-        //
         checkUpdates();
 
         startBookLoader();
@@ -157,7 +149,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setTitle(getString(R.string.app_name));
-            supportActionBar.setDisplayHomeAsUpEnabled(false);
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
         }
 
     }
@@ -242,7 +234,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         MenuItem menuItem = menu.findItem(R.id.toolbar_menu_actionbar_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.search_book));
+        Objects.requireNonNull(searchView).setQueryHint(getString(R.string.search_book));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -311,7 +303,8 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         File f = new File(getFilesDir(), "temporary.e-lib");
         if (f.exists()) {
-            f.delete();
+            boolean result = f.delete();
+            if (!result) throw new RuntimeException("Dosya silinemedi.");
         } else {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -400,76 +393,75 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         AlertDialog.Builder builder = new AlertDialog.Builder(LibraryActivity.this);
         builder.setTitle("Uyarı")
                 .setMessage(getString(R.string.need_email))
-                .setPositiveButton("E posta ekle", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                .setPositiveButton("E posta ekle", (dialogInterface, i) -> {
 
-                        //
-                        // Create set e mail dialog views
-                        //
+                    //
+                    // Create set e mail dialog views
+                    //
 
-                        View inflatedView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.dialog_layout_set_email, null, false);
+                    View inflatedView = LayoutInflater.from(getApplicationContext()).inflate(
+                            R.layout.dialog_layout_set_email,
+                            null,
+                            false
+                    );
 
-                        //
-                        // Show set e mail dialog
-                        //
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LibraryActivity.this);
-                        builder.setView(inflatedView);
-                        builder.setPositiveButton(getText(R.string.ok), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                    //
+                    // Show set e mail dialog
+                    //
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(LibraryActivity.this);
+                    builder1.setView(inflatedView);
+                    builder1.setPositiveButton(getText(R.string.ok), (dialogInterface1, i1) -> {
 
-                                String email = ((EditText) inflatedView.findViewById(R.id.dialog_layout_set_email_et_email)).getText().toString();
-                                String password = ((EditText) inflatedView.findViewById(R.id.dialog_layout_set_email_et_password)).getText().toString();
+                        String email = ((EditText) inflatedView
+                                .findViewById(R.id.dialog_layout_set_email_et_email))
+                                .getText().toString();
 
-                                OnCompleteListener<AuthResult> onCompleteListener = new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        String password = ((EditText) inflatedView
+                                .findViewById(R.id.dialog_layout_set_email_et_password))
+                                .getText().toString();
 
-                                        if (task.isSuccessful()) {
+                        OnCompleteListener<AuthResult> onCompleteListener = task -> {
 
-                                            new Thread(new Runnable() {
-                                                @Override
-                                                public void run() {
+                            if (task.isSuccessful()) {
 
-                                                    try {
+                                new Thread(() -> {
 
-                                                        //firebaseUser = firebaseAuth.getCurrentUser();
-                                                        /*
-                                                        haldun.update.user.email(CurrentUser.user.getId(), firebaseUser.getEmail());
-                                                        haldun.update.user.uid(CurrentUser.user.getId(), firebaseUser.getUid());
-                                                        haldun.update.user.password(CurrentUser.user.getId(), Cryptor.encryptString(password));
+                                    try {
+
+                                        // TODO: e postayı veritabanına kaydet
+
+                                        //firebaseUser = firebaseAuth.getCurrentUser();
+                                        /*
+                                        haldun.update.user.email(CurrentUser.user.getId(), firebaseUser.getEmail());
+                                        haldun.update.user.uid(CurrentUser.user.getId(), firebaseUser.getUid());
+                                        haldun.update.user.password(CurrentUser.user.getId(), Cryptor.encryptString(password));
 
 
-                                                         */
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                        // TODO: start error activity
-                                                    }
-
-                                                    throw new RuntimeException("Not ready yet");
-
-                                                }
-                                            }).start();
-
-                                            Toast.makeText(LibraryActivity.this, "E posta başarıyla eklendi", Toast.LENGTH_SHORT).show();
-
-                                        }else {
-                                            Toast.makeText(LibraryActivity.this, "Hata!", Toast.LENGTH_SHORT).show();
-                                        }
-
+                                         */
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        // TODO: start error activity
                                     }
-                                };
 
-                                firebaseUserService.createUser(email, password, onCompleteListener);
+                                    throw new RuntimeException("Not ready yet");
 
+                                }).start();
+
+                                Toast.makeText(LibraryActivity.this, "E posta başarıyla eklendi", Toast.LENGTH_SHORT).show();
+
+                            }else {
+                                Toast.makeText(LibraryActivity.this, "Hata!", Toast.LENGTH_SHORT).show();
                             }
-                        });
 
-                        AlertDialog dialog = builder.create();
-                        dialog.show();
+                        };
 
-                    }
+                        firebaseUserService.createUser(email, password, onCompleteListener);
+
+                    });
+
+                    AlertDialog dialog = builder1.create();
+                    dialog.show();
+
                 })
                 .setNegativeButton("İptal", null);
 
@@ -493,122 +485,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         finish();
     }
 
-    @Deprecated
-    private Thread loadBooks2() {
-
-        Thread netThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                MariaDB mariaDB = new MariaDB();
-                mariaDB.setExceptionListener(Throwable::printStackTrace);
-
-                bookAdapter.reset();
-
-                mariaDB.setOnBookProcessListener((book, index) -> runOnUiThread(() ->  {
-                    bookAdapter.addItem(book);
-                }));
-
-                Manager databaseManager = new Manager(mariaDB);
-
-                swipeRefreshLayout.setRefreshing(false);
-
-                Sorting sorting;
-
-                //new PreferencesTool(getSharedPreferences(PreferencesTool.NAME, MODE_PRIVATE)).setValue(PreferencesTool.Keys.BOOK_SORTING_TYPE, arc.haldun.database.Sorting.A_TO_Z.getStringValue());
-
-                try {
-                    sorting = Sorting.valueOf(new Tools.Preferences(
-                            getSharedPreferences(Tools.Preferences.NAME, MODE_PRIVATE))
-                            .getInt(Tools.Preferences.Keys.BOOK_SORTING_TYPE));
-
-                } catch (IllegalArgumentException e) {
-                    sorting = Sorting.OLD_TO_NEW;
-                    new Tools.Preferences(
-                            getSharedPreferences(Tools.Preferences.NAME, MODE_PRIVATE))
-                            .setValue(Preferences.Keys.BOOK_SORTING_TYPE, Sorting.OLD_TO_NEW.getStringValue());
-                }
-
-                databaseManager.selectBook(sorting, 50);
-
-            }
-        });
-
-        if (!CurrentUser.user.isSuspended()) netThread.start();
-
-        return netThread;
-
-    }
-
-    @Deprecated
-    private Thread loadBooks(){
-
-        networkThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                try {
-                    Manager databaseManager = new Manager(new MariaDB().setExceptionListener(Throwable::printStackTrace));
-
-                    Log.e("DEBUG", "get books");
-
-                    Sorting sorting = Sorting.valueOf(new Tools.Preferences(
-                            getSharedPreferences(Tools.Preferences.NAME, MODE_PRIVATE))
-                            .getString(Tools.Preferences.Keys.BOOK_SORTING_TYPE));
-
-                    books = databaseManager.selectBook(sorting);
-
-/*
-                    Sorting.sort(books, Sorting.Type.valueOf(new PreferencesTool(
-                            getSharedPreferences(PreferencesTool.NAME, MODE_PRIVATE))
-                            .getString(PreferencesTool.Keys.BOOK_SORTING_TYPE))); // Get sorting type from preferences
-
- */
-
-                } catch (IllegalArgumentException e) {
-                    //new PreferencesTool(getSharedPreferences(PreferencesTool.NAME, MODE_PRIVATE)).setValue(PreferencesTool.Keys.BOOK_SORTING_TYPE, String.valueOf(Sorting.Type.A_TO_Z_BOOK_NAME));
-                }
-            }
-        });
-
-        Thread mainThread = new Thread(() -> {
-
-            networkThread.start();
-            try {
-                networkThread.join();
-            } catch (InterruptedException e) {
-                Tools.startErrorActivity(LibraryActivity.this, e);
-            }
-
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(() -> {
-                try {
-                    bookAdapter = new BookAdapter(LibraryActivity.this, books);
-                } catch (NullPointerException e) {
-                    Tools.startErrorActivity(LibraryActivity.this, e);
-                }
-
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-
-                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.item_animation_fall_down);
-                LayoutAnimationController layoutAnimationController = new LayoutAnimationController(animation);
-
-                recyclerView.setLayoutAnimation(layoutAnimationController);
-                recyclerView.setLayoutManager(linearLayoutManager);
-                //recyclerView.setAdapter(bookAdapter);
-
-                progressBar.setVisibility(View.GONE);
-
-                swipeRefreshLayout.setRefreshing(false);
-            });
-        });
-
-        mainThread.start();
-
-        return mainThread;
-    }
-
     Book[] filterBooks(Book[] originalList, String query) {
 
         ArrayList<Book> filteredBooksList = new ArrayList<>();
@@ -619,7 +495,8 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
 
-        return filteredBooksList.toArray(new Book[filteredBooksList.size()]);
+        //return filteredBooksList.toArray(new Book[filteredBooksList.size()]);
+        return filteredBooksList.toArray(new Book[0]);
 
     }
 
@@ -711,12 +588,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             if (!Environment.isExternalStorageManager()) {
 
                 Snackbar snackbar = Snackbar.make(relativeLayout, "Verilerinizi telefonunuza kaydedebilmem için bana izin vermelisiniz UwU", Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction("İzin ver", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        startActivity(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION));
-                    }
-                });
+                snackbar.setAction("İzin ver", view -> startActivity(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)));
                 snackbar.show();
 
             }

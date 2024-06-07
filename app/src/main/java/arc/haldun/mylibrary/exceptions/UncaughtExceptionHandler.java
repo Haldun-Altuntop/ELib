@@ -16,8 +16,6 @@ import java.util.Locale;
 
 import arc.haldun.mylibrary.Tools;
 
-;
-
 public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     private final Context context;
@@ -37,7 +35,9 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
         try {
             File logFile = new File(context.getExternalFilesDir(""),"Log");
             if (!logFile.exists()) {
-                logFile.createNewFile();
+
+                boolean result = logFile.createNewFile();
+                if (!result) throw new RuntimeException("Dosya oluşturulamadı");
             }
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -71,10 +71,6 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
         });
 
         Looper.loop();
-
-    }
-
-    private void launchErrorActivity() {
 
     }
 }

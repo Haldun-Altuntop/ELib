@@ -49,7 +49,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         ActionBar supportActionbar = getSupportActionBar();
         if (supportActionbar != null) {
             supportActionbar.setTitle(R.string.app_name);
-            supportActionbar.setDisplayHomeAsUpEnabled(true);
+            supportActionbar.setDisplayHomeAsUpEnabled(false);
         }
 
         cardProfile.setOnClickListener(this);
@@ -78,7 +78,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
         startActivity(new Intent(getApplicationContext(), SuspendedActivity.class));
 
-        Toast.makeText(this, "Yasaklı kullanıcı", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.suspended_user), Toast.LENGTH_LONG).show();
     }
 
     @Override

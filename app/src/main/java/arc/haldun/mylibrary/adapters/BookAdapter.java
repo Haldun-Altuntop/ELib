@@ -1,5 +1,6 @@
 package arc.haldun.mylibrary.adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Collections;
 
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
@@ -30,11 +31,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     /**
      * Bu yapıcı metot tek bir kitabı listelemek için kullanılır.
-     * @param activity
-     * @param book
+     * @param activity Adaptörün kök aktivitesi
+     * @param book Listelenecek kitap
      */
     public BookAdapter(Activity activity, Book book) {
-        this.books = new ArrayList<>(Arrays.asList(book));
+        this.books = new ArrayList<>(Collections.singletonList(book)); // TODO: test this changesets
         this.layoutInflater = LayoutInflater.from(activity.getApplicationContext());
         this.rootActivity = activity;
     }
@@ -45,6 +46,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         this.rootActivity = activity;
     }
 
+    @SuppressWarnings("unused")
     public BookAdapter(Activity activity, ArrayList<Book> books) {
         this.books = books;
         this.layoutInflater = LayoutInflater.from(activity.getApplicationContext());
@@ -69,34 +71,26 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         if (positionChangeListener != null)
             positionChangeListener.onPositionChange(position);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.itemView.setOnClickListener(view -> {
 
-                Intent intent = new Intent(rootActivity, BookDetailsActivity.class);
-                intent.putExtra("id", currentBook.getId())
-                    .putExtra("name", currentBook.getName())
-                    .putExtra("author", currentBook.getAuthor())
-                    .putExtra("contributor", currentBook.getContributor().getName())
-                    .putExtra("publisher", currentBook.getPublisher())
-                    .putExtra("publication_year", currentBook.getPublicationYear())
-                    .putExtra("page", currentBook.getPage())
-                    .putExtra("type", currentBook.getType())
-                    .putExtra("asset_number", currentBook.getAssetNumber())
-                    .putExtra("registration_date", currentBook.getRegistrationDate())
-                    .putExtra("cabinet_number", currentBook.getCabinetNumber())
-                    .putExtra("popularity", currentBook.getPopularity());
+            Intent intent = new Intent(rootActivity, BookDetailsActivity.class);
+            intent.putExtra("id", currentBook.getId())
+                .putExtra("name", currentBook.getName())
+                .putExtra("author", currentBook.getAuthor())
+                .putExtra("contributor", currentBook.getContributor().getName())
+                .putExtra("publisher", currentBook.getPublisher())
+                .putExtra("publication_year", currentBook.getPublicationYear())
+                .putExtra("page", currentBook.getPage())
+                .putExtra("type", currentBook.getType())
+                .putExtra("asset_number", currentBook.getAssetNumber())
+                .putExtra("registration_date", currentBook.getRegistrationDate())
+                .putExtra("cabinet_number", currentBook.getCabinetNumber())
+                .putExtra("popularity", currentBook.getPopularity());
 
-                intent.putExtra("book", currentBook);
+            intent.putExtra("book", currentBook);
 
-                rootActivity.startActivity(intent);
-            }
+            rootActivity.startActivity(intent);
         });
-
-        /*
-        Animation animation = AnimationUtils.loadAnimation(rootActivity.getApplicationContext(), R.anim.item_animation_fall_down);
-        holder.itemView.startAnimation(animation);
-         */
     }
 
     @Override
@@ -105,8 +99,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
     }
 
     public void removeItem(int position) {
-
-
+        throw new UnsupportedOperationException("Henüz işlevsel değil.");
     }
 
     public void addItem(Book book) {
@@ -116,6 +109,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
 
     }
 
+    @SuppressLint("notifyDataSetChanged")
     public void reset() {
 
         books.clear();
@@ -143,12 +137,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             if (CurrentUser.user.getPriority().equals(User.USER)) {
                 btn_delete.setVisibility(View.GONE);
 
-                btn_delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        removeItem(getAdapterPosition());
-                    }
-                });
+                btn_delete.setOnClickListener(view -> removeItem(getAdapterPosition()));
             }
         }
 

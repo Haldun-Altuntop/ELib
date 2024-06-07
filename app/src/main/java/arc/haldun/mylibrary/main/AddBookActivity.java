@@ -68,29 +68,23 @@ public class AddBookActivity extends AppCompatActivity {
             Toast.makeText(this, getString(R.string.author_cannot_be_empty), Toast.LENGTH_SHORT).show();
         } else {
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Looper.prepare();
+            new Thread(() -> {
+                Looper.prepare();
 
-                    Book book = new Book();
-                    book.setName(bookName);
-                    book.setAuthor(author);
-                    book.setContributor(CurrentUser.user);
-                    book.setRegistrationDate(new DateTime());
+                Book book = new Book();
+                book.setName(bookName);
+                book.setAuthor(author);
+                book.setContributor(CurrentUser.user);
+                book.setRegistrationDate(new DateTime());
 
-                    Manager manager = new Manager(new MariaDB());
-                    manager.addBook(book);
-                    Toast.makeText(getApplicationContext(), getString(R.string.book_successfully_added), Toast.LENGTH_SHORT).show();
+                Manager manager = new Manager(new MariaDB());
+                manager.addBook(book);
+                Toast.makeText(getApplicationContext(), getString(R.string.book_successfully_added), Toast.LENGTH_SHORT).show();
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            et_bookName.setText("");
-                            et_author.setText("");
-                        }
-                    });
-                }
+                runOnUiThread(() -> {
+                    et_bookName.setText("");
+                    et_author.setText("");
+                });
             }).start();
 
         }

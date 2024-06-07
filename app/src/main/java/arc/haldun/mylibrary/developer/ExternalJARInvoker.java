@@ -16,7 +16,7 @@ import dalvik.system.DexClassLoader;
 public class ExternalJARInvoker {
 
     private final Context context;
-    private File dexFolder, destinationDEX;
+    private final File dexFolder, destinationDEX;
 
     private final ArrayList<Class<?>> parameterTypes;
     private final ArrayList<Object> parameters;

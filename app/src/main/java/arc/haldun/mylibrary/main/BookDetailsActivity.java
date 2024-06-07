@@ -1,8 +1,8 @@
 package arc.haldun.mylibrary.main;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
@@ -17,18 +17,13 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
-import arc.haldun.database.driver.Connector;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.DateTime;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.R;
-import arc.haldun.mylibrary.Tools;
 
 public class BookDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -86,22 +81,9 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         tv_popularity.append(String.valueOf(currentBook.getPopularity()));
 
 
-        // Check availability of book
-        if (currentBook.getBorrowedBy() != 0) {
+        checkBookAvailability();
 
-            new Thread(() -> {
-
-                User user = databaseManager.getUser(currentBook.getBorrowedBy());
-
-                new Handler(Looper.getMainLooper())
-                        .post(() -> tv_availability.setText(
-                                String.format("Bu kitap %s tarafından okunuyor", user.getName()))
-                                );
-            }).start();
-
-        } else {
-            tv_availability.setText("Müsait");
-        }
+        easterEggForRose();
 
         new Thread(()->{
 
@@ -127,6 +109,33 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
         if (view.equals(btn_save)) {
             // TODO: save book info changes
+        }
+    }
+
+    private void checkBookAvailability() {
+
+        if (currentBook.getBorrowedBy() != 0) {
+
+            new Thread(() -> {
+
+                User user = databaseManager.getUser(currentBook.getBorrowedBy());
+
+                new Handler(Looper.getMainLooper())
+                        .post(() -> tv_availability.setText(
+                                String.format("Bu kitap %s tarafından okunuyor", user.getName()))
+                        );
+            }).start();
+
+        } else {
+            tv_availability.setText("Müsait");
+        }
+    }
+
+    private void easterEggForRose() {
+
+        if (currentBook.getId() == 1 && CurrentUser.user.getId() == 33) {
+            tv_availability.setText("Bu kitabı alamazsınız. Gül, bahçesinde güzel.");
+            tv_availability.setTextColor(Color.RED);
         }
     }
 

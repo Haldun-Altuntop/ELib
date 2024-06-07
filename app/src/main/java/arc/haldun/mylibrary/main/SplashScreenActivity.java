@@ -54,15 +54,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     Handler handlerMain, handlerBackground;
 
     Tools.Update update;
-    //mObservable server;
-    //mObserver client;
-
-    //FirebaseAuth firebaseAuth;
-    //FirebaseUser firebaseUser;
     HandlerThread splashScreenThread;
     Runnable rInitLanguage, rConnectDatabase, rCheckUpdates, rCheckUser, rNetwork;
     boolean hasUpdate = false;
     boolean isConnected;
+
+    String url = "https://drive.google.com/drive/folders/1Wd95pcUJ6UDVsEp_xYjDrQrEwk3fJvCm?usp=sharing";
 
     public static User[] users;
 
@@ -143,7 +140,6 @@ public class SplashScreenActivity extends AppCompatActivity {
             //
             // Redirect download page
             //
-            String url = "http://haldun.online";
 
             try {
                 Intent intentBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -321,37 +317,4 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         splashScreenThread.quit();
     }
-
-    /*
-    class mObserver implements Observer {
-
-        @Override
-        public void update(Observable observable) {
-            dialog.show();
-        }
-    }
-
-    static class mObservable extends Observable {
-
-        private int versionCode;
-
-        @SuppressWarnings("unused")
-        public int getVersionCode() {
-            return versionCode;
-        }
-
-        public void setVersionCode(int versionCode) {
-            this.versionCode = versionCode;
-            check();
-        }
-
-        public void check() {
-
-            if (versionCode > BuildConfig.VERSION_CODE) {
-                notice();
-            }
-        }
-    }
-
-     */
 }

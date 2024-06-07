@@ -35,11 +35,6 @@ public class ErrorActivity extends AppCompatActivity {
         tv_errorMessage.setText(errorMessage);
         btn_report.setOnClickListener(this::reportError);
         btn_restart.setOnClickListener(this::restartApp);
-
-        /**
-         * Temporarily added code
-         */
-        //new DirectoryMapExtractor(this);
     }
 
     private void reportError(View view) {
@@ -50,30 +45,6 @@ public class ErrorActivity extends AppCompatActivity {
         });
 
         System.err.println(errorMessage);
-
-
-
-        /*
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    //new haldun().reportError(CurrentUser.user, errorMessage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            Tools.startErrorActivity(ErrorActivity.this, e);
-                        }
-                    });
-                }
-            }
-        }).start();
-
-         */
-
     }
 
     private void restartApp(View view) {

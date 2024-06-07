@@ -61,6 +61,7 @@
     </string>
     <string name="language_and_input">Languages and Input</string>
     <string name="theme">Theme</string>
+    <string name="suspended_user">Suspended user</string>
 
     <!-- Languages -->
     <string name="turkish" translatable="false">Türkçe</string>

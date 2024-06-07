@@ -17,11 +17,12 @@ import arc.haldun.mylibrary.services.filetransfer.TransferService;
 
 public class BugReporter {
 
-    private Context context;
-    private Exception e;
-    private String date;
-    private String fileName;
+    private final Context context;
+    private final Exception e;
+    private final String date;
+    private final String fileName;
 
+    @SuppressWarnings("unused")
     public BugReporter(Context context, Exception e) {
         this.context = context;
         this.e = e;
