@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import arc.haldun.database.database.MariaDB;
+import arc.haldun.database.exception.OperationFailedException;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
@@ -79,10 +80,16 @@ public class BorrowedBooksFragment extends Fragment {
 
             new Thread(() -> {
 
-                Book book = new MariaDB().getBook(CurrentUser.user.getBorrowedBook());
+                Book book = null;
+                try {
+                    book = new MariaDB().getBook(CurrentUser.user.getBorrowedBook());
+                } catch (OperationFailedException e) {
+                    throw new RuntimeException(e);
+                }
 
+                Book finalBook = book;
                 handler.post(()-> {
-                    bookAdapter = new BookAdapter(requireActivity(), book);
+                    bookAdapter = new BookAdapter(requireActivity(), finalBook);
 
                     Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_fall_down);
                     LayoutAnimationController animationController = new LayoutAnimationController(animation);

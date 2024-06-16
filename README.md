@@ -1,5 +1,20 @@
 # E-Lib
 
+# 1.12.0 - prerelease4
+* Added images:
+    - accept.xml
+    - remove.xml
+
+* **Activity Request (layout):**
+    - Added action bar
+    - Added recycler view
+    - Added progress bar
+
+* Created **_card_request.xml_**
+* Created **Request Adapter**
+* Created **Request Loader**
+* Initialized **_Requests Activity_**
+
 # 1.12.0 - prerelease2
 * warnings fixed:
 
@@ -33,3 +48,7 @@
 
 * **Home Page Activity:** Üst barın geri tuşu aktiflerştirildi.
 * **Library Activity:** Üst barın geri tuşu kapatıldı.
+* '_suspended\_user_' dizisi eklendi.
+* **Library Activity:** 
+    + `loadBooks()` removed.
+    + `loadBooks2()` removed.

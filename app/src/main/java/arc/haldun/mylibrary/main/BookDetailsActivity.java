@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
+import arc.haldun.database.exception.OperationFailedException;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.DateTime;
@@ -118,11 +119,17 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
             new Thread(() -> {
 
-                User user = databaseManager.getUser(currentBook.getBorrowedBy());
+                User user = null;
+                try {
+                    user = databaseManager.getUser(currentBook.getBorrowedBy());
+                } catch (OperationFailedException e) {
+                    throw new RuntimeException(e);
+                }
 
+                User finalUser = user;
                 new Handler(Looper.getMainLooper())
                         .post(() -> tv_availability.setText(
-                                String.format("Bu kitap %s tarafından okunuyor", user.getName()))
+                                String.format("Bu kitap %s tarafından okunuyor", finalUser.getName()))
                         );
             }).start();
 
