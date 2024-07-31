@@ -12,9 +12,10 @@ android {
         minSdk 24
         targetSdk 34
         versionCode 11101
-        versionName "1.12.0 - prerelease4"
+        versionName "1.12.0 - prerelease5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -46,10 +47,10 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
     implementation 'com.google.android.material:material:1.10.0'
-    implementation 'com.google.firebase:firebase-auth:22.2.0'
+    implementation 'com.google.firebase:firebase-auth:23.0.0'
     implementation 'com.google.firebase:firebase-analytics'
 
-    implementation platform('com.google.firebase:firebase-bom:32.2.0')
+    implementation platform('com.google.firebase:firebase-bom:33.1.2')
     implementation 'androidx.activity:activity:1.8.0'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

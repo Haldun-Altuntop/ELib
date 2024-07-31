@@ -3,6 +3,7 @@ package arc.haldun.mylibrary.adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -144,6 +145,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
         public void setData(Book currentBook) {
             this.tv_bookName.setText(currentBook.getName());
             this.tv_author.setText(currentBook.getAuthor());
+
+            // Easter egg for rose
+            if (currentBook.getId() == 1 && CurrentUser.user.getId() == 33) {
+                tv_bookName.setTextColor(Color.MAGENTA);
+            }
         }
 
         private void init() {

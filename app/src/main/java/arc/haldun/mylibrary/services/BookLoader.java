@@ -16,7 +16,7 @@ import arc.haldun.mylibrary.adapters.BookAdapter;
 
 public class BookLoader {
 
-    public static final int RANGE = 500;
+    public static final int RANGE = 100;
 
     public Book[] books;
     private final Manager manager;

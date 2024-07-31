@@ -6,16 +6,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
@@ -23,6 +27,7 @@ import arc.haldun.database.exception.OperationFailedException;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.DateTime;
+import arc.haldun.database.objects.Request;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.R;
 
@@ -31,15 +36,20 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
     Book currentBook;
     //String contributor;
 
-    EditText et_id, et_bookname, et_author, et_owner;
+    TextView tv_bookname, tv_author, tv_publicationYear, tv_page, tv_type, tv_cabinetNumber,
+            tv_lbl_reserve;
 
-    TextView tv_availability, tv_publisher, tv_publicationYear, tv_page, tv_type, tv_assetNumber,
-            tv_regDate, tv_cabinetNumber, tv_popularity;
+    CardView cardOtherInformation, cardReserve;
 
-    Button btn_save;
+    Button btn_reserve;
+
+    ProgressBar progressBar;
+
     Toolbar actionbar;
 
     Manager databaseManager;
+
+    boolean requested = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,42 +69,23 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         }
 
 
-        if (!CurrentUser.user.getPriority().equals(User.SUPERUSER)) { // Check superuser
-            et_id.setEnabled(false);
-            et_bookname.setEnabled(false);
-            et_author.setEnabled(false);
-            et_owner.setEnabled(false);
-            btn_save.setVisibility(View.GONE);
-        }
+        tv_bookname.setText(currentBook.getName());
+        tv_author.setText(currentBook.getAuthor());
 
-        et_id.setText(String.valueOf(currentBook.getId()));
-        et_bookname.setText(currentBook.getName());
-        et_author.setText(currentBook.getAuthor());
-        et_owner.setText(currentBook.getContributor().getName());
-
-        tv_publisher.append(currentBook.getPublisher());
         tv_publicationYear.append(currentBook.getPublicationYear());
         tv_page.append(String.valueOf(currentBook.getPage()));
         tv_type.append(currentBook.getType().getStringValue());
-        tv_assetNumber.append(currentBook.getAssetNumber());
-        tv_regDate.append(currentBook.getRegistrationDate().getDateTime());
         tv_cabinetNumber.append(String.valueOf(currentBook.getCabinetNumber()));
-        tv_popularity.append(String.valueOf(currentBook.getPopularity()));
 
+        cardOtherInformation.setOnClickListener(this);
+        //cardReserve.setOnClickListener(this);
+        btn_reserve.setOnClickListener(this);
 
         checkBookAvailability();
 
         easterEggForRose();
 
-        new Thread(()->{
-
-            try {
-                Thread.sleep(100);
-                databaseManager.addBookLog(currentBook, CurrentUser.user, new DateTime());
-            } catch (InterruptedException e) {
-                Log.e("BookDetailsActivity", "Kitap kaydı eklenemedi. Thread hatalıydı.");
-            }
-        }).start();
+        addLog();
     }
 
     @Override
@@ -108,14 +99,70 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View view) {
 
-        if (view.equals(btn_save)) {
-            // TODO: save book info changes
+        if (view.equals(cardOtherInformation)) {
+
         }
+
+        if (view.equals(btn_reserve)) {
+            reserveThisBook();
+        }
+    }
+
+    private void reserveThisBook() {
+
+        if (currentBook.isBorrowed() || requested) return;
+
+        progressBar.setVisibility(View.VISIBLE);
+        //tv_lbl_reserve.setVisibility(View.GONE);
+        btn_reserve.setText("");
+
+        new Thread(() -> {
+
+            Request request = Request.createNewRequest(currentBook, CurrentUser.user);
+            databaseManager.addRequest(request);
+
+            new Handler(getMainLooper()).post(() -> {
+                progressBar.setVisibility(View.GONE);
+                //tv_lbl_reserve.setVisibility(View.VISIBLE);
+                btn_reserve.setText("Talebiniz Alındı");
+                requested = true;
+
+                showReservationDialog();
+            });
+
+        }).start();
+    }
+
+    private void showReservationDialog() {
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder.setTitle("Talebiniz alındı")
+                .setMessage("Üç gün içinde kütüphane görevlisine müracaat ediniz.")
+                .setPositiveButton("Kapat", null);
+
+        alertDialogBuilder.create().show();
+
+    }
+
+    private void addLog() {
+
+        new Thread(()->{
+
+            try {
+                Thread.sleep(100);
+                databaseManager.addBookLog(currentBook, CurrentUser.user, new DateTime());
+            } catch (InterruptedException e) {
+                Log.e("BookDetailsActivity", "Kitap kaydı eklenemedi. Thread hatalıydı.");
+            }
+        }).start();
     }
 
     private void checkBookAvailability() {
 
         if (currentBook.getBorrowedBy() != 0) {
+
+            tv_lbl_reserve.setText("Bu kitap kullanımda");
 
             new Thread(() -> {
 
@@ -127,44 +174,47 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
                 }
 
                 User finalUser = user;
+                /*
                 new Handler(Looper.getMainLooper())
                         .post(() -> tv_availability.setText(
-                                String.format("Bu kitap %s tarafından okunuyor", finalUser.getName()))
-                        );
+                                String.format("Bu kitap %s tarafından okunuyor", finalUser.getName())
+                        ));
+                 */
             }).start();
 
         } else {
-            tv_availability.setText("Müsait");
+            //tv_availability.setText("Müsait");
         }
     }
 
     private void easterEggForRose() {
 
+        /*
         if (currentBook.getId() == 1 && CurrentUser.user.getId() == 33) {
             tv_availability.setText("Bu kitabı alamazsınız. Gül, bahçesinde güzel.");
             tv_availability.setTextColor(Color.RED);
         }
+         */
     }
 
     private void init() {
-        et_id = findViewById(R.id.activity_book_details_et_bookid);
-        et_bookname = findViewById(R.id.activity_book_details_et_bookname);
-        et_author = findViewById(R.id.activity_book_details_et_author);
-        et_owner = findViewById(R.id.activity_book_details_et_owner);
 
-        tv_availability = findViewById(R.id.activity_book_details_tv_availability);
-        tv_publisher = findViewById(R.id.activity_book_details_tv_publisher);
+        tv_bookname = findViewById(R.id.activity_book_details_tv_bookname);
+        tv_author = findViewById(R.id.activity_book_details_tv_author);
         tv_publicationYear = findViewById(R.id.activity_book_details_tv_publication_year);
         tv_page = findViewById(R.id.activity_book_details_tv_page);
         tv_type = findViewById(R.id.activity_book_details_tv_type);
-        tv_assetNumber = findViewById(R.id.activity_book_details_tv_asset_number);
-        tv_regDate = findViewById(R.id.activity_book_details_tv_registration_date);
         tv_cabinetNumber = findViewById(R.id.activity_book_details_tv_cabinet_number);
-        tv_popularity = findViewById(R.id.activity_book_details_tv_popularity);
+        //tv_lbl_reserve = findViewById(R.id.activity_book_details_tv_lbl_reserve);
 
-        btn_save = findViewById(R.id.activity_book_details_btn_save);
+        btn_reserve = findViewById(R.id.activity_book_details_btn_reserve);
+
+        progressBar = findViewById(R.id.activity_book_details_progress_bar);
+
         actionbar = findViewById(R.id.activity_book_details_actionbar);
 
+        cardOtherInformation = findViewById(R.id.activity_book_details_card_other_information);
+        //cardReserve = findViewById(R.id.activity_book_details_card_reserve);
 
         databaseManager = new Manager(new MariaDB());
     }

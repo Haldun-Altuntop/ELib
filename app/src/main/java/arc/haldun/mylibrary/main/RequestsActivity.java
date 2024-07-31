@@ -31,7 +31,7 @@ public class RequestsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private Manager databaseManager;
-    private ArrayList<Request> requests = new ArrayList<>();
+    private final ArrayList<Request> requests = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

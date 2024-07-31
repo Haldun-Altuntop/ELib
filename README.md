@@ -1,5 +1,10 @@
 # E-Lib
 
+# 1.12.0 - prerelease5
+* Book Details Activity kullanıcı arayüzü yeniden tasarlandı.
+* Book Ldader sınıfının aralığı 100 yapıldı.
+* Library Activity üst bardaki geri tuşu işlevli hale getirildi.
+
 # 1.12.0 - prerelease4
 * Added images:
     - accept.xml
