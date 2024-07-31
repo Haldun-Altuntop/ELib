@@ -270,13 +270,17 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         int id = item.getItemId();
 
-        if (id == R.id.toolbar_menu_actionbar_account) startActivity(new Intent(LibraryActivity.this, ProfileActivity.class));
+        if (id == R.id.toolbar_menu_actionbar_account)
+            startActivity(new Intent(LibraryActivity.this, ProfileActivity.class));
 
-        if (id == R.id.toolbar_menu_actionbar_settings) startActivity(new Intent(LibraryActivity.this, SettingsActivity.class));
+        if (id == R.id.toolbar_menu_actionbar_settings)
+            startActivity(new Intent(LibraryActivity.this, SettingsActivity.class));
 
         if (id == R.id.toolbar_menu_actionbar_logout) logout();
 
         if (id == R.id.toolbar_menu_actionbar_debug) debug();
+
+        if (id == android.R.id.home) finish();
 
         return true;
     }
