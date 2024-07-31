@@ -3,6 +3,7 @@ package arc.haldun.mylibrary.main;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -10,7 +11,10 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,6 +32,7 @@ import arc.haldun.mylibrary.adapters.RequestAdapter;
 
 public class RequestsActivity extends AppCompatActivity {
 
+    private Toolbar actionbar;
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
     private Manager databaseManager;
@@ -44,6 +49,13 @@ public class RequestsActivity extends AppCompatActivity {
             return insets;
         });
         init();
+
+        setSupportActionBar(actionbar);
+        ActionBar supportActionbar = getSupportActionBar();
+        if (supportActionbar != null) {
+            supportActionbar.setTitle("Talepler");
+            supportActionbar.setDisplayHomeAsUpEnabled(true);
+        }
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
@@ -81,6 +93,7 @@ public class RequestsActivity extends AppCompatActivity {
     }
 
     private void init() {
+        actionbar = findViewById(R.id.activity_requests_actionbar);
         recyclerView = findViewById(R.id.activity_requests_recycler_view_requests);
         progressBar = findViewById(R.id.activity_requests_progress_bar);
 
@@ -89,5 +102,15 @@ public class RequestsActivity extends AppCompatActivity {
 
     private void onRequestProcess(Request request) {
         if (request.getState() == Request.State.PENDING) requests.add(request);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int itemId = item.getItemId();
+
+        if (itemId == android.R.id.home) finish();
+
+        return super.onOptionsItemSelected(item);
     }
 }

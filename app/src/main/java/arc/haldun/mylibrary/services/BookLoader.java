@@ -26,6 +26,7 @@ public class BookLoader {
     private final BookAdapter bookAdapter;
     private Sorting sorting;
     private final Context context;
+    private boolean paused;
 
     OnBookProcessListener bookProcessListener;
 
@@ -43,7 +44,7 @@ public class BookLoader {
 
         bookProcessListener = (book, i) -> {
 
-            Log.e("index of book", "pos: " + i);
+            //Log.e("index of book", "pos: " + i);
 
             if (i == 0 || i % RANGE != 0) {
 
@@ -90,15 +91,27 @@ public class BookLoader {
 
     private void setSorting() {
 
-        Tools.Preferences preferencesTool = new Tools.Preferences(this.context.getSharedPreferences(Tools.Preferences.NAME, Context.MODE_PRIVATE));
+        Tools.Preferences preferencesTool = new Tools.Preferences(
+                this.context.getSharedPreferences(Tools.Preferences.NAME, Context.MODE_PRIVATE)
+        );
 
         this.sorting = Sorting.valueOf(preferencesTool.getInt(Tools.Preferences.Keys.BOOK_SORTING_TYPE));
     }
 
     public void resume() {
+
         synchronized (handler) {
             handler.notifyAll();
         }
     }
 
+    @Deprecated(since = "Başaramadım")
+    public void pause() {
+
+        if (paused) return;
+
+        new Thread(() -> {
+
+        }).start();
+    }
 }

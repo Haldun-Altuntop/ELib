@@ -162,7 +162,7 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
         if (currentBook.getBorrowedBy() != 0) {
 
-            tv_lbl_reserve.setText("Bu kitap kullanımda");
+            btn_reserve.setText("Bu kitap kullanımda");
 
             new Thread(() -> {
 

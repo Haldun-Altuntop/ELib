@@ -135,7 +135,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             super(itemView);
             init();
 
-            if (CurrentUser.user.getPriority().equals(User.USER)) {
+            if (CurrentUser.user.getPriority().equals(User.Priority.USER)) {
                 btn_delete.setVisibility(View.GONE);
 
                 btn_delete.setOnClickListener(view -> removeItem(getAdapterPosition()));
@@ -149,7 +149,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             // Easter egg for rose
             if (currentBook.getId() == 1 && CurrentUser.user.getId() == 33) {
                 tv_bookName.setTextColor(Color.MAGENTA);
-            }
+            } else if (currentBook.isBorrowed()) {
+                tv_bookName.setTextColor(Color.RED);
+            } else tv_bookName.setTextColor(Color.WHITE);
         }
 
         private void init() {

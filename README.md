@@ -1,5 +1,20 @@
 # E-Lib
 
+# 1.12.0 - prerelease6
+* **Book Details Activity (Layout):** 
+    + Kenur boşlukları azaltıldı.
+    + Tasarım iyileştirildi.
+* Müsait olmayan kitaplar kırmızı ile işaretlenir.
+* **Book Loader:** Çalışmayan fonksiyonlar kaldırıldı.
+* Kotlin bağımlılık sürüm uyuşmazlığı giderildi.
+* **Library Activity:**
+    + *Deprecated* ibaresi kaldırıldı.
+    + Kitap ekleme butonu *user* rolündeki kullanıcılara gizlendi.
+* **Priority** enum sınıfı oluşturuldu, **User** sınıfı içindeki roller bu enum'a taşındı.
+* **Request Adapter:** *onClick* olayı iyileştirildi.
+* **Request Activity:** Action bar eklendi.
+* Yeni stringler eklendi.
+
 # 1.12.0 - prerelease5
 * Book Details Activity kullanıcı arayüzü yeniden tasarlandı.
 * Book Ldader sınıfının aralığı 100 yapıldı.

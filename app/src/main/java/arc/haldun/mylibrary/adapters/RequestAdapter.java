@@ -120,8 +120,8 @@ public class RequestAdapter
 
         @Override
         public void onClick(View v) {
-            if (v.equals(btn_accept)) acceptRequest();
-            if (v.equals(btn_reject)) rejectRequest();
+            //if (v.equals(btn_accept)) acceptRequest();
+            //if (v.equals(btn_reject)) rejectRequest();
         }
 
         private void acceptRequest() {

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,8 +36,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -62,17 +59,7 @@ import arc.haldun.mylibrary.services.NotificationService;
 import arc.haldun.mylibrary.services.filetransfer.FileTransferService;
 import arc.haldun.mylibrary.settings.SettingsActivity;
 
-/**
- * Library Activity is deprecated. Use Home Page Activity instead.
- */
-
-@Deprecated
 public class LibraryActivity extends AppCompatActivity implements View.OnClickListener {
-
-    @Deprecated
-    FirebaseAuth firebaseAuth;
-    @Deprecated
-    FirebaseUser firebaseUser;
 
     FirebaseUserService firebaseUserService;
 
@@ -82,10 +69,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     FloatingActionButton fab_addBook;
     RelativeLayout relativeLayout;
 
-    public static Book[] books;
     Manager databaseManager;
-
-    Thread networkThread;
 
     BookAdapter bookAdapter;
 
@@ -129,9 +113,11 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             bookLoader.restart();
             swipeRefreshLayout.setRefreshing(false);
 
-
-
         });
+
+        if (CurrentUser.user.getPriority().degree < User.Priority.ADMIN.degree) {
+            fab_addBook.setVisibility(View.GONE);
+        }
     }
 
     private void startBookLoader() {
@@ -181,6 +167,12 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -191,6 +183,8 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
             this.lastSetSorting = sorting;
         }
+
+        bookLoader.resume();
 
         //av();
     }
@@ -302,6 +296,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    @SuppressWarnings("unused")
     private void av() {
         // Av
 
@@ -329,7 +324,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
     private void debug() {
 
-        if (CurrentUser.user.getPriority().equals(User.DEVELOPER)) {
+        if (CurrentUser.user.getPriority().equals(User.Priority.DEVELOPER)) {
             startActivity(new Intent(getApplicationContext(), arc.haldun.mylibrary.developer.DeveloperActivity.class));
         } else {
             Snackbar.make(relativeLayout, "Geliştirici değilsiniz", Snackbar.LENGTH_SHORT).show();
@@ -360,7 +355,9 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
                     intentBrowser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intentBrowser);
                 } catch (ActivityNotFoundException e) {
-                    e.printStackTrace();
+
+                    Log.e("LibraryActivity", "", e);
+
                 }
             };
 
@@ -443,7 +440,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
                                          */
                                     } catch (Exception e) {
-                                        e.printStackTrace();
                                         // TODO: start error activity
                                     }
 
@@ -564,38 +560,5 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
                 Log.e("HaldununLogu", "Şu anda maks gittiğiniz indexten aşağıdasınız");
             }
         };
-    }
-
-    @Deprecated
-    private void snackBar() {
-
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), 
-                Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION) != PackageManager
-                                                                        .PERMISSION_GRANTED) {
-
-            //Toast.makeText(this, "İzin verilmemiş", Toast.LENGTH_SHORT).show();
-            
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-
-            /*
-            if (ContextCompat.checkSelfPermission(getApplicationContext(), Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION) != PackageManager.PERMISSION_GRANTED
-                    || !Environment.isExternalStorageManager()) {
-
-                Action.snackBar(this, relativeLayout);
-
-            }
-
-             */
-
-            if (!Environment.isExternalStorageManager()) {
-
-                Snackbar snackbar = Snackbar.make(relativeLayout, "Verilerinizi telefonunuza kaydedebilmem için bana izin vermelisiniz UwU", Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction("İzin ver", view -> startActivity(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)));
-                snackbar.show();
-
-            }
-        }
     }
 }

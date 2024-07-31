@@ -153,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Thread thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            User user = new User(firebaseAuth.getUid(), username, password, email, String.valueOf(BuildConfig.VERSION_CODE), User.USER,
+                            User user = new User(firebaseAuth.getUid(), username, password, email, String.valueOf(BuildConfig.VERSION_CODE), User.Priority.USER,
                                     new DateTime(), new DateTime(), 0);
 
                             Manager manager = new Manager(new MariaDB());
