@@ -1,10 +1,16 @@
 # E-Lib
 
+# 1.12.2
+* `Library Activity`'nin parent aktivitesi `Home Page Activity` olarak ayarlandı.
+* `Register Activity` içinde şifre onaylama kutusunun içindeki _pasword_ ibaresi _password again_ olarak değiştirildi.
+* **Register Activity**
+    + Şifre kontrolünün mantık akışı iyileştirildi.
+
 # 1.12.1
 * Ayarlar aktivitesine `Uygulama bilgileri` bölümü eklendi.
 * `Card Item` sınıfına yeni fonksiyonlar eklendi:
-    - `addTittle`: Mevcut başlık değişkeninin sonuna ekler.
-    - `addSubTittle`: Mevcut altbaşlık değişkeninin sonuna ekler.
+    + `addTittle`: Mevcut başlık değişkeninin sonuna ekler.
+    + `addSubTittle`: Mevcut altbaşlık değişkeninin sonuna ekler.
 
 # 1.12.0
 * Yeni aktiviteler oluşturuldu:

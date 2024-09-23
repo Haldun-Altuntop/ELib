@@ -47,6 +47,7 @@
             android:exported="false" />
         <activity
             android:name=".main.LibraryActivity"
+            android:parentActivityName=".main.HomePageActivity"
             android:exported="false" />
         <activity
             android:name=".main.WelcomeActivity"

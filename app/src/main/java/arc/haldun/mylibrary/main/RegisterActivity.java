@@ -110,13 +110,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                 if (password.length() < minPasswordLength) Toast.makeText(this, getString(R.string.invalid_password), Toast.LENGTH_SHORT).show();
 
+                // Şifreler uyuşmuyorsa
+                else if (password.equals(password2)) Toast.makeText(this, getString(R.string.passwords_dont_match), Toast.LENGTH_SHORT).show();
+
                 else register(username, email, password);
-
-                if (password.equals(password2)) { // şifreler uyuşuyorsa
-
-                } else { // şifreler uyuşmuyorsa
-                    Toast.makeText(this, getString(R.string.passwords_dont_match), Toast.LENGTH_SHORT).show();
-                }
             }
         }
     }
@@ -158,6 +155,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                             Manager manager = new Manager(new MariaDB());
                             manager.addUser(user);
+                            manager.login(user);
                         }
                     });
                     thread.start();

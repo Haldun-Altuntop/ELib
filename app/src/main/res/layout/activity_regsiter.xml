@@ -62,7 +62,7 @@
         android:layout_below="@id/register_activity_et_password"
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="10dp"
-        android:hint="@string/password"
+        android:hint="Password Again"
         android:inputType="textPassword"
         android:background="@drawable/edittext_bg"
         android:padding="10dp" />
