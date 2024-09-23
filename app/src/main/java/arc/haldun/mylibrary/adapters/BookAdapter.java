@@ -146,10 +146,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
             this.tv_bookName.setText(currentBook.getName());
             this.tv_author.setText(currentBook.getAuthor());
 
-            // Easter egg for rose
-            if (currentBook.getId() == 1 && CurrentUser.user.getId() == 33) {
-                tv_bookName.setTextColor(Color.MAGENTA);
-            } else if (currentBook.isBorrowed()) {
+            if (currentBook.isBorrowed()) {
                 tv_bookName.setTextColor(Color.RED);
             } else tv_bookName.setTextColor(Color.WHITE);
         }

@@ -1,5 +1,6 @@
 package arc.haldun.mylibrary.main;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -39,7 +40,7 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
     TextView tv_bookname, tv_author, tv_publicationYear, tv_page, tv_type, tv_cabinetNumber,
             tv_lbl_reserve;
 
-    CardView cardOtherInformation, cardReserve;
+    CardView cardOtherInformation;
 
     Button btn_reserve;
 
@@ -83,8 +84,6 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
         checkBookAvailability();
 
-        easterEggForRose();
-
         addLog();
     }
 
@@ -100,12 +99,19 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View view) {
 
         if (view.equals(cardOtherInformation)) {
-
+            startOtherInformationActivity();
         }
 
         if (view.equals(btn_reserve)) {
             reserveThisBook();
         }
+    }
+
+    private void startOtherInformationActivity() {
+
+        Intent intent = new Intent(getApplicationContext(), OtherInformationActivity.class);
+        intent.putExtra("book", currentBook);
+        startActivity(intent);
     }
 
     private void reserveThisBook() {
@@ -185,16 +191,6 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
         } else {
             //tv_availability.setText("Müsait");
         }
-    }
-
-    private void easterEggForRose() {
-
-        /*
-        if (currentBook.getId() == 1 && CurrentUser.user.getId() == 33) {
-            tv_availability.setText("Bu kitabı alamazsınız. Gül, bahçesinde güzel.");
-            tv_availability.setTextColor(Color.RED);
-        }
-         */
     }
 
     private void init() {

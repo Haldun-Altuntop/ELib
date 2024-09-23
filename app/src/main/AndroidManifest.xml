@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ELib"
         tools:targetApi="31">
         <activity
+            android:name=".main.OtherInformationActivity"
+            android:exported="false" />
+        <activity
             android:name=".main.RequestsActivity"
             android:exported="false" />
         <activity

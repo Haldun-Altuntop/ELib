@@ -1,5 +1,11 @@
 # E-Lib
 
+# 1.12.0
+* Yeni aktiviteler oluşturuldu:
+  * *OtherInformationActivity*
+* **Book Details Activity:**
+  * *Diğer Bilgiler* butonu artık kullanılabilir.
+
 # 1.12.0 - prerelease6
 * **Book Details Activity (Layout):** 
     + Kenur boşlukları azaltıldı.

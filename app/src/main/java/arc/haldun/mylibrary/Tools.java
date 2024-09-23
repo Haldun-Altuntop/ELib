@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.widget.Toast;
 
 import java.sql.ResultSet;
@@ -11,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import arc.haldun.database.driver.Connector;
+import arc.haldun.database.objects.Book;
+import arc.haldun.mylibrary.main.BookDetailsActivity;
 import arc.haldun.mylibrary.main.ErrorActivity;
 
 public class Tools {
