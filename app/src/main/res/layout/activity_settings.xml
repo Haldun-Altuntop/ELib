@@ -77,6 +77,28 @@
                 app:subTitle="@string/old_to_new"
                 app:showIcon="false" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="App Info"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/teal_200"
+                android:padding="10dp" />
+
+            <arc.haldun.mylibrary.views.CardItem
+                android:id="@+id/activity_settings_item_app_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tittle="Info"
+                app:subTitle="Version: " />
+
+            <arc.haldun.mylibrary.views.CardItem
+                android:id="@+id/activity_settings_item_credits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tittle="Credits" />
+
         </LinearLayout>
 
     </ScrollView>

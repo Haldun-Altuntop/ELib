@@ -67,6 +67,16 @@ public class CardItem extends RelativeLayout {
         this.tv_tittle.setText(tittle);
     }
 
+    public void addTitle(CharSequence tittle) {
+        String remainingTittle = tv_tittle.getText().toString();
+        tv_tittle.setText(String.format("%s%s", remainingTittle, tittle));
+    }
+
+    public void addSubTittle(CharSequence subTittle) {
+        String remainingSubTittle = tv_subTittle.getText().toString();
+        tv_subTittle.setText(String.format("%s%s", remainingSubTittle, subTittle));
+    }
+
     public void setSubTittle(CharSequence subTittle) {
         this.tv_subTittle.setText(subTittle);
     }

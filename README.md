@@ -1,5 +1,11 @@
 # E-Lib
 
+# 1.12.1
+* Ayarlar aktivitesine `Uygulama bilgileri` bölümü eklendi.
+* `Card Item` sınıfına yeni fonksiyonlar eklendi:
+    - `addTittle`: Mevcut başlık değişkeninin sonuna ekler.
+    - `addSubTittle`: Mevcut altbaşlık değişkeninin sonuna ekler.
+
 # 1.12.0
 * Yeni aktiviteler oluşturuldu:
   * *OtherInformationActivity*

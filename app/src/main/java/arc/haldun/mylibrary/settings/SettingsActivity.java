@@ -3,6 +3,7 @@ package arc.haldun.mylibrary.settings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -14,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import arc.haldun.database.Sorting;
 import arc.haldun.database.objects.CurrentUser;
+import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.Tools.Preferences;
@@ -26,7 +28,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     AlertDialog.Builder dialogBuilder;
     AlertDialog dialog;
 
-    CardItem cardLanguage, cardAccount, cardSortBooks, cardTheme; // TODO: Init 'cardTheme'
+    CardItem cardLanguage, cardAccount, cardSortBooks, cardTheme, cardAppInfo, cardCredits;
 
     Toolbar actionbar;
 
@@ -57,10 +59,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cardAccount.setTittle(CurrentUser.user.getName());
         cardAccount.setSubTittle(CurrentUser.user.getPassword());
 
+        cardAppInfo.addSubTittle(BuildConfig.VERSION_NAME);
+
         cardLanguage.setOnClickListener(this);
         cardAccount.setOnClickListener(this);
         cardSortBooks.setOnClickListener(this);
         cardTheme.setOnClickListener(this);
+        cardAppInfo.setOnClickListener(this);
+        cardCredits.setOnClickListener(this);
     }
 
     @Override
@@ -89,6 +95,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         cardLanguage = findViewById(R.id.activity_settings_item_language);
         cardSortBooks = findViewById(R.id.activity_settings_item_sorting);
         cardTheme = findViewById(R.id.activity_settings_item_theme);
+        cardAppInfo = findViewById(R.id.activity_settings_item_app_info);
+        cardCredits = findViewById(R.id.activity_settings_item_credits);
 
         preferencesTool = new Tools.Preferences(
                 getSharedPreferences(Tools.Preferences.NAME, MODE_PRIVATE));
@@ -105,6 +113,49 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (view.equals(cardSortBooks)) showSortingOptionsDialog();
 
         if (view.equals(cardTheme)) showThemeOptionsDialog();
+
+        if (view.equals(cardAppInfo)) showAppInfo();
+
+        if (view.equals(cardCredits)) showCredits();
+    }
+
+    private void showCredits() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("Geliştirici: ").append("Haldun Altuntop").append("\n\n");
+        stringBuilder.append("İletişim").append("\n")
+                .append("\t\t").append("Telefon: ").append("+90 542 112 55 78").append("\n")
+                .append("\t\t").append("E-Posta: ").append("altuntophaldun@gmail.com").append("\n\n");
+        stringBuilder.append("Bizi tercih ettiğiniz için teşekkür ederiz :)");
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder
+                .setTitle("Credits")
+                .setMessage(stringBuilder.toString())
+                .setPositiveButton(getString(R.string.ok), null);
+
+        alertDialogBuilder.create().show();
+    }
+
+    private void showAppInfo() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("Version: ").append(BuildConfig.VERSION_NAME).append("\n");
+        stringBuilder.append("Version Code: ").append(BuildConfig.VERSION_CODE).append("\n");
+        stringBuilder.append("Yayın Türü: ").append(BuildConfig.BUILD_TYPE);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        alertDialogBuilder
+                .setTitle("Application Information")
+                .setMessage(stringBuilder.toString())
+                .setPositiveButton(getString(R.string.ok), null);
+
+        alertDialogBuilder.create().show();
+
     }
 
     private void showThemeOptionsDialog() {
