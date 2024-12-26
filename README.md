@@ -1,5 +1,13 @@
 # E-Lib
 
+# 1.12.3
+* `Requests Activity` -> talep listesi boş oldupunda bilgilendirme mesajı gösterilir.
+* `Splash Screen` -> Bilgilendirici yazının başlangıç içeriği uygulama adı olarak değiştirildi (önceden:TextView).
+* `Book Loader` optimize edildi, yoruma alınmış kodlar kaldırıldı.
+* **Library Activity**
+    + `onPause` durumunda `Book Loader` durdurulur.
+    + `positionChangeListener` işlemi iyileştirildi.
+
 # 1.12.2
 * `Library Activity`'nin parent aktivitesi `Home Page Activity` olarak ayarlandı.
 * `Register Activity` içinde şifre onaylama kutusunun içindeki _pasword_ ibaresi _password again_ olarak değiştirildi.

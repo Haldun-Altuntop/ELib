@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -87,6 +88,7 @@ public class RequestsActivity extends AppCompatActivity {
                 recyclerView.setLayoutAnimation(layoutAnimationController);
 
                 progressBar.setVisibility(View.GONE);
+                if (requests.isEmpty()) Toast.makeText(this, "Talep listesi boş.", Toast.LENGTH_SHORT).show();
             });
 
         }).start();

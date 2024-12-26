@@ -170,6 +170,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
 
+        bookLoader.pause();
     }
 
     @Override
@@ -545,7 +546,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
             Log.i("BookAdapter", "position: " + position);
 
-            if (position % BookLoader.RANGE == 0 && position >= lastMaxPos -10 || position == bookAdapter.getItemCount() - 2) {
+            if ((position % BookLoader.RANGE == 0 && position >= lastMaxPos - 10) || position == bookAdapter.getItemCount() - 2) {
                 bookLoader.resume();
             }
 
@@ -557,7 +558,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             }
 
             if (position < lastMaxPos) {
-                Log.e("HaldununLogu", "Şu anda maks gittiğiniz indexten aşağıdasınız");
+                Log.e("HaldununLogu", "Şu anda maks gittiğiniz indexten aşağıdasınız. Last max index: " + lastMaxPos);
             }
         };
     }

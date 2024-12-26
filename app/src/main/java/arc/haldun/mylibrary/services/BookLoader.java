@@ -44,20 +44,16 @@ public class BookLoader {
 
         bookProcessListener = (book, i) -> {
 
-            //Log.e("index of book", "pos: " + i);
+            if (paused) return;
 
             if (i == 0 || i % RANGE != 0) {
 
                 mainHandler.post(() -> bookAdapter.addItem(book));
+                System.out.println("Kitap numarası: " + i);
 
             } else {
-                try {
-                    synchronized (handler) {
-                        handler.wait();
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                paused = true;
+                Log.i("Book Loader", "Maksimum aralığa ulaşıldı. Book Loader bekletiliyor.");
             }
 
         };
@@ -69,13 +65,13 @@ public class BookLoader {
 
         setSorting();
 
+        paused = false;
+
         handler.post(() -> books = manager.selectBook(sorting));
 
     }
 
     public void restart() {
-
-        //handler = new Handler(handlerThread.getLooper());
 
         handlerThread.quit();
         bookAdapter.reset();
@@ -100,18 +96,11 @@ public class BookLoader {
 
     public void resume() {
 
-        synchronized (handler) {
-            handler.notifyAll();
-        }
+        paused = false;
     }
 
-    @Deprecated(since = "Başaramadım")
     public void pause() {
 
-        if (paused) return;
-
-        new Thread(() -> {
-
-        }).start();
+        paused = true;
     }
 }
