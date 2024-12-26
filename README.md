@@ -1,5 +1,10 @@
 # E-Lib
 
+# 1.12.4
+* **Book Loader**
+    + `handler` final duruma getirildi.
+    + Optimizasyon yapıldı.
+
 # 1.12.3
 * `Requests Activity` -> talep listesi boş oldupunda bilgilendirme mesajı gösterilir.
 * `Splash Screen` -> Bilgilendirici yazının başlangıç içeriği uygulama adı olarak değiştirildi (önceden:TextView).

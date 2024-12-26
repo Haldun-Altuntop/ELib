@@ -21,7 +21,7 @@ public class BookLoader {
     public Book[] books;
     private final Manager manager;
     private HandlerThread handlerThread;
-    private Handler handler;
+    private final Handler handler;
     private final Handler mainHandler;
     private final BookAdapter bookAdapter;
     private Sorting sorting;
@@ -53,6 +53,15 @@ public class BookLoader {
 
             } else {
                 paused = true;
+
+                synchronized (handler) {
+                    try {
+                        handler.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
                 Log.i("Book Loader", "Maksimum aralığa ulaşıldı. Book Loader bekletiliyor.");
             }
 
@@ -79,7 +88,7 @@ public class BookLoader {
         handlerThread = new HandlerThread("BookLoaderThread");
         handlerThread.start();
 
-        handler = new Handler(handlerThread.getLooper());
+        //handler = new Handler(handlerThread.getLooper());
 
         start();
 
@@ -97,6 +106,10 @@ public class BookLoader {
     public void resume() {
 
         paused = false;
+
+        synchronized (handler) {
+            handler.notify();Thread.yield();
+        }
     }
 
     public void pause() {

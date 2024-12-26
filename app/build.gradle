@@ -22,8 +22,8 @@ android {
         applicationId "arc.haldun.mylibrary"
         minSdk 24
         targetSdk 34
-        versionCode 11202
-        versionName "1.12.3"
+        versionCode 11204
+        versionName "1.12.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
