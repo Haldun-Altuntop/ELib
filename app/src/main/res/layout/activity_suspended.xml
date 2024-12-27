@@ -6,11 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".main.SuspendedActivity">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="6dp"
+        android:src="@drawable/baseline_warning_24"
+        app:layout_constraintBottom_toTopOf="@+id/activity_suspended_tv_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/activity_suspended_tv_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bu uygulamaya erişiminiz kısıtlanmıştır"
+        android:text="Bu uygulamaya erişiminiz kısıtlanmıştır."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

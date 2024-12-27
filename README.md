@@ -1,5 +1,9 @@
 # E-Lib
 
+# 1.12.5
+* Drawable olarak ünlem işareti eklendi (`baseline_warning_24`)
+* `Suspended Activity`'ye ünlem işareti eklendi.
+
 # 1.12.4
 * **Book Loader**
     + `handler` final duruma getirildi.
