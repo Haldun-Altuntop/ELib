@@ -1,5 +1,8 @@
 # E-Lib
 
+# 1.12.7
+* `Client Version` artık Home Page Activity'de yapılır. (Eskiden Library Activity'deydi.)
+
 # 1.12.6
 * `Splash Screen Activity`'ye `arc.haldun.database.database.Manager` objesi eklendi.
 * Kullanıcı durumu (online, offline) veritabanına gönderilir (`Home Page Activity`).

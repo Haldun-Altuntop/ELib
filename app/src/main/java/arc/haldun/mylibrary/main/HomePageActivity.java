@@ -22,6 +22,7 @@ import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.User;
+import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
@@ -33,6 +34,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private Manager databaseManager;
     private Toolbar actionBar;
     private CardView cardProfile, cardSettings, cardSearch, cardFriends, cardLogout, cardRequests;
+
+    private FirebaseUserService firebaseUserService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
 
         setUserStateOnline();
+        updateClientVersion();
     }
 
     @Override
@@ -84,6 +88,30 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         super.onDestroy();
 
         setUserStateOffline();
+    }
+
+    private void updateClientVersion() {
+
+        if (firebaseUserService.hasLoggedInUser()) { // Giriş yapmış kullanıcı varsa
+
+            String uid = firebaseUserService.getFirebaseUser().getUid();
+            new Thread(() -> {
+                CurrentUser.user = databaseManager.getUser(uid); // CurrentUser sınıfını başlat
+
+                //
+                // Set client version
+                //
+                databaseManager.updateClientVersion(CurrentUser.user, String.valueOf(BuildConfig.VERSION_CODE));
+            }).start();
+        } else if (CurrentUser.user != null) {
+
+            Log.e("LibraryActivity", "Currentuser.user null idi");
+
+        } else { // Giriş yapmış kullanıcı yoksa
+
+            Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+            startActivity(intent); // WelcomeActivity'ye yönlendir
+        }
     }
 
     private void setUserStateOffline() {
@@ -174,5 +202,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         cardFriends = findViewById(R.id.activity_home_page_cardview_friends);
         cardLogout = findViewById(R.id.activity_home_page_cardview_logout);
         cardRequests = findViewById(R.id.activity_home_page_cardview_requests);
+
+        firebaseUserService = new FirebaseUserService();
     }
 }

@@ -141,32 +141,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (firebaseUserService.hasLoggedInUser()) { // Giriş yapmış kullanıcı varsa
-
-            String uid = firebaseUserService.getFirebaseUser().getUid();
-            new Thread(() -> {
-                CurrentUser.user = databaseManager.getUser(uid); // CurrentUser sınıfını başlat
-
-                //
-                // Set client version
-                //
-                databaseManager.updateClientVersion(CurrentUser.user, String.valueOf(BuildConfig.VERSION_CODE));
-            }).start();
-        } else if (CurrentUser.user != null) {
-
-            Log.e("LibraryActivity", "Currentuser.user null idi");
-
-        } else { // Giriş yapmış kullanıcı yoksa
-
-            Intent intent = new Intent(LibraryActivity.this, WelcomeActivity.class);
-            startActivity(intent); // WelcomeActivity'ye yönlendir
-        }
-    }
-
-    @Override
     protected void onPause() {
         super.onPause();
 
