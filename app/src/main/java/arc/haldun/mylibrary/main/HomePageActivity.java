@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Objects;
 
+import arc.haldun.database.database.Manager;
+import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.R;
@@ -28,6 +30,7 @@ import arc.haldun.mylibrary.settings.SettingsActivity;
 
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private Manager databaseManager;
     private Toolbar actionBar;
     private CardView cardProfile, cardSettings, cardSearch, cardFriends, cardLogout, cardRequests;
 
@@ -62,6 +65,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         if (Objects.equals(CurrentUser.user.getPriority(), User.USER)) {
             cardRequests.setVisibility(View.INVISIBLE);
         }
+
+        setUserStateOnline();
     }
 
     @Override
@@ -72,6 +77,23 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             startSuspendedActivity();
             finish();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        setUserStateOffline();
+    }
+
+    private void setUserStateOffline() {
+
+        new Thread(() -> databaseManager.setUserState(CurrentUser.user, User.State.OFFLINE)).start();
+    }
+
+    private void setUserStateOnline() {
+
+        new Thread(() -> databaseManager.setUserState(CurrentUser.user, User.State.ONLINE)).start();
     }
 
     private void startSuspendedActivity() {
@@ -142,6 +164,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void init() {
+        databaseManager = new Manager(new MariaDB());
+
         actionBar = findViewById(R.id.activity_home_page_actionbar);
 
         cardProfile = findViewById(R.id.activity_home_page_cardview_profile);

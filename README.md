@@ -1,5 +1,9 @@
 # E-Lib
 
+# 1.12.6
+* `Splash Screen Activity`'ye `arc.haldun.database.database.Manager` objesi eklendi.
+* Kullanıcı durumu (online, offline) veritabanına gönderilir (`Home Page Activity`).
+
 # 1.12.5
 * Drawable olarak ünlem işareti eklendi (`baseline_warning_24`)
 * `Suspended Activity`'ye ünlem işareti eklendi.

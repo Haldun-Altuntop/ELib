@@ -206,10 +206,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 isConnected = databaseConfig.connect();
             } catch (IOException e) {
                 Tools.startErrorActivity(getApplicationContext(), e);
-            } catch (ClassNotFoundException e) {
-                Tools.startErrorActivity(
-                        getApplicationContext(),
-                        new ClassNotFoundException(getString(R.string.class_not_foud_exception_msg)));
             }
         };
 
