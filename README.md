@@ -1,5 +1,8 @@
 # E-Lib
 
+# 1.12.10
+* `SuspendedActivity` artık bağlantıyı kapatır.
+
 # 1.12.9
 * `ContributionFragment` artık işlevsel.
 

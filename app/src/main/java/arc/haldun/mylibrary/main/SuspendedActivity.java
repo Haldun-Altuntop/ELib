@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import arc.haldun.database.driver.Connector;
 import arc.haldun.mylibrary.R;
 
 public class SuspendedActivity extends AppCompatActivity {
@@ -19,6 +20,8 @@ public class SuspendedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_suspended);
         init();
+
+        Connector.close();
 
         actionTextSession = () -> {
 
