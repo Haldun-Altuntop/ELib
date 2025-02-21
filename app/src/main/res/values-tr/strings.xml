@@ -36,7 +36,7 @@
     <string name="language">Dil</string>
     <string name="restart_needed__change">Değişikliklerin tam olarak uygulanabilmesi için uygulamayı yeniden başlatın</string>
     <string name="ok">Tamam</string>
-    <string name="no_contribution">Katkı yok</string>
+    <string name="no_contribution">Bu sisteme hiç katkıda bulunmamışsınız.</string>
     <string name="reg_date">Kayıt tarihi%s</string>
     <string name="save">Kaydet</string>
     <string name="book_id">Kitap ID</string>

@@ -36,7 +36,7 @@
     <string name="language">Language</string>
     <string name="restart_needed__change">Restart needed to apply all changes correctly</string>
     <string name="ok">OK</string>
-    <string name="no_contribution">No contribution</string>
+    <string name="no_contribution">You have no contribution yet.</string>
     <string name="id" translatable="false">ID%s</string>
     <string name="reg_date">Registration date%s</string>
     <string name="save">Save</string>
