@@ -8,6 +8,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import arc.haldun.database.database.Manager;
+import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.Book;
+import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.adapters.BookAdapter;
 
@@ -26,9 +30,12 @@ import arc.haldun.mylibrary.adapters.BookAdapter;
  */
 public class ContributionFragment extends Fragment {
 
-    RecyclerView recyclerView;
-    BookAdapter bookAdapter;
-    ProgressBar progressBar;
+    private RecyclerView recyclerView;
+    private BookAdapter bookAdapter;
+    private ProgressBar progressBar;
+    private TextView tv_noContribution;
+    private Book[] books;
+    private Manager databaseManager;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -80,61 +87,49 @@ public class ContributionFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         init(view);
 
-        final Book[][] books = new Book[1][1];
 
-        Thread networkThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        Thread networkThread = new Thread(this::initBooks);
+        networkThread.start();
 
-                /*
+    }
 
-                try {
-                    books[0] = new haldun().selectBook();
-                    books[0] = CurrentUser.selectContribution(books[0]);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-                TODO: Contribution
-                 */
-            }
-        });
+    private void initBooks() {
 
-        Thread mainThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
+        books = databaseManager.getContribution(CurrentUser.user);
 
-                networkThread.start();
-                try {
-                    networkThread.join();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+        requireActivity().runOnUiThread(this::listContribution);
+    }
 
-                requireActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(View.GONE);
+    private void listContribution() {
 
-                        bookAdapter = new BookAdapter(requireActivity(), books[0]);
+        if (books == null) {
+            throw new RuntimeException("Kitap listesi null");
+        }
 
-                        Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_fall_down);
-                        LayoutAnimationController layoutAnimationController = new LayoutAnimationController(animation);
+        if (books.length == 0) {
+            tv_noContribution.setVisibility(View.VISIBLE);
+        }
 
-                        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
-                        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+        progressBar.setVisibility(View.GONE);
 
-                        recyclerView.setLayoutManager(linearLayoutManager);
-                        recyclerView.setLayoutAnimation(layoutAnimationController);
-                        recyclerView.setAdapter(bookAdapter);
-                    }
-                });
-            }
-        });
-        //mainThread.start();
+        bookAdapter = new BookAdapter(requireActivity(), books);
+
+        Animation animation = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_fall_down);
+        LayoutAnimationController layoutAnimationController = new LayoutAnimationController(animation);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutAnimation(layoutAnimationController);
+        recyclerView.setAdapter(bookAdapter);
     }
 
     private void init(View view) {
         recyclerView = view.findViewById(R.id.contribution_fragment_recyclerview);
         progressBar = view.findViewById(R.id.contribution_fragment_progressbar);
+        tv_noContribution = view.findViewById(R.id.contribution_fragment_tv_no_contribution);
+
+        databaseManager = new Manager(new MariaDB());
     }
 }

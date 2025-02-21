@@ -180,9 +180,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         );
         preferencesTool.setValue(Tools.Preferences.Keys.REMEMBER_ME, false);
 
-        new FirebaseUserService().signOut();
+        //new FirebaseUserService().signOut();
+        firebaseUserService.signOut();
 
-        CurrentUser.user = null;
+        //CurrentUser.user = null;
 
         // Prepare intent
         Intent intWelcomeActivity = new Intent(getApplicationContext(), WelcomeActivity.class);

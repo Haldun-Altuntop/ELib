@@ -16,4 +16,13 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
+    <TextView
+        android:id="@+id/contribution_fragment_tv_no_contribution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_contribution"
+        android:layout_centerInParent="true"
+        android:textStyle="italic"
+        android:visibility="gone"/>
+
 </RelativeLayout>

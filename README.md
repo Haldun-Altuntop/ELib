@@ -1,5 +1,8 @@
 # E-Lib
 
+# 1.12.9
+* `ContributionFragment` artık işlevsel.
+
 # 1.12.8
 * `BookLoader` optimize edildi.
 
