@@ -1,5 +1,8 @@
 # E-Lib
 
+# 1.12.8
+* `BookLoader` optimize edildi.
+
 # 1.12.7
 * `Client Version` artık Home Page Activity'de yapılır. (Eskiden Library Activity'deydi.)
 

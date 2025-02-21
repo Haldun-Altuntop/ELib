@@ -18,7 +18,7 @@ public class BookLoader {
 
     public static final int RANGE = 100;
 
-    public Book[] books;
+    private MariaDB mariaDB;
     private final Manager manager;
     private HandlerThread handlerThread;
     private Handler handler;
@@ -32,51 +32,46 @@ public class BookLoader {
 
     public BookLoader(Context context, BookAdapter bookAdapter) {
 
-        this.handlerThread = new HandlerThread("BookLoaderThread");
-        this.mainHandler = new Handler(Looper.getMainLooper());
         this.context = context;
         this.bookAdapter = bookAdapter;
         this.sorting = Sorting.OLD_TO_NEW; // Default value
+        this.mainHandler = new Handler(Looper.getMainLooper());
 
+        this.handlerThread = new HandlerThread("BookLoaderThread");
         handlerThread.start();
 
         handler = new Handler(handlerThread.getLooper());
 
-        bookProcessListener = (book, i) -> {
+        bookProcessListener = this::onBookProcess;
 
-            if (paused) return;
+        mariaDB = new MariaDB();
+        mariaDB.setOnBookProcessListener(bookProcessListener);
 
-            if (i == 0 || i % RANGE != 0) {
+        manager = new Manager(mariaDB);
+    }
 
-                mainHandler.post(() -> bookAdapter.addItem(book));
-                System.out.println("Kitap numarası: " + i);
+    private void onBookProcess(Book book, int i) {
 
-            } else {
-                paused = true;
+        if (i == 0 || i % RANGE != 0) {
 
-                synchronized (handler) {
-                    try {
-                        handler.wait();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
+            mainHandler.post(() -> bookAdapter.addItem(book));
+            //System.out.println("Kitap numarası: " + i);
 
-                Log.i("Book Loader", "Maksimum aralığa ulaşıldı. Book Loader bekletiliyor.");
-            }
+        } else {
 
-        };
+            mariaDB.pause();
 
-        manager = new Manager(new MariaDB().setOnBookProcessListener(bookProcessListener));
+            Log.i("Book Loader", "Maksimum aralığa ulaşıldı. Book Loader bekletiliyor.");
+        }
     }
 
     public void start() {
 
         setSorting();
 
-        paused = false;
+        mariaDB.resume();
 
-        handler.post(() -> books = manager.selectBook(sorting));
+        handler.post(() -> manager.selectBook(sorting));
 
     }
 
@@ -105,15 +100,12 @@ public class BookLoader {
 
     public void resume() {
 
-        paused = false;
+        mariaDB.resume();
 
-        synchronized (handler) {
-            handler.notify();
-        }
     }
 
     public void pause() {
 
-        paused = true;
+        mariaDB.pause();
     }
 }

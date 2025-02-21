@@ -73,6 +73,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         handlerBackground = new Handler(splashScreenThread.getLooper());
 
+        // Animasyonun tamamlanmasını bekliyoruz (1 saniye)
         handlerBackground.postDelayed(rNetwork, 1000);
 
         Tools.Preferences preferencesTool = new Tools.Preferences(getSharedPreferences(
