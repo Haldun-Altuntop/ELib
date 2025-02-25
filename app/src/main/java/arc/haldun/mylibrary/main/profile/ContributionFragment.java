@@ -93,6 +93,13 @@ public class ContributionFragment extends Fragment {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        //databaseManager.stopCurrentOperation();
+    }
+
     private void initBooks() {
 
         books = databaseManager.getContribution(CurrentUser.user);

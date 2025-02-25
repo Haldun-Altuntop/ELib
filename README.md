@@ -1,5 +1,8 @@
 # E-Lib
 
+# 1.12.11
+* `RegisterActivity`: Kayıt olma hatası düzeltildi.
+
 # 1.12.10
 * `SuspendedActivity` artık bağlantıyı kapatır.
 

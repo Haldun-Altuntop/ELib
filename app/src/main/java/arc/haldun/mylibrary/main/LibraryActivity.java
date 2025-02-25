@@ -47,7 +47,6 @@ import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.User;
-import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.Tools.Preferences;
@@ -178,6 +177,11 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         if (!rememberMe) {
             firebaseUserService.signOut();
         }
+
+        //
+        // Stop book loader
+        //
+        bookLoader.stop();
     }
 
 

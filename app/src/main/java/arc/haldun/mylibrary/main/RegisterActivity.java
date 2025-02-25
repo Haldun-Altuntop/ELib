@@ -111,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 if (password.length() < minPasswordLength) Toast.makeText(this, getString(R.string.invalid_password), Toast.LENGTH_SHORT).show();
 
                 // Şifreler uyuşmuyorsa
-                else if (password.equals(password2)) Toast.makeText(this, getString(R.string.passwords_dont_match), Toast.LENGTH_SHORT).show();
+                else if (!password.equals(password2)) Toast.makeText(this, getString(R.string.passwords_dont_match), Toast.LENGTH_SHORT).show();
 
                 else register(username, email, password);
             }

@@ -108,4 +108,9 @@ public class BookLoader {
 
         mariaDB.pause();
     }
+
+    public void stop() {
+
+        manager.stopCurrentOperation();
+    }
 }
