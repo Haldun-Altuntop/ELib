@@ -22,8 +22,8 @@ android {
         applicationId "arc.haldun.mylibrary"
         minSdk 24
         targetSdk 34
-        versionCode 11211
-        versionName "1.12.11"
+        versionCode 11212
+        versionName "1.12.12"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -31,7 +31,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         android.applicationVariants.all { variant ->

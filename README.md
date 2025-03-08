@@ -1,5 +1,9 @@
 # E-Lib
 
+# 1.12.12
+* `SplashScreenActivity`: Runnable objeleri _public_ ve _static_ yapıldı.
+* `BookLoader`: Hizmet başlatılırken bağlantı kontrol edilir. `bkz: start()`
+
 # 1.12.11
 * `RegisterActivity`: Kayıt olma hatası düzeltildi.
 

@@ -9,10 +9,12 @@ import android.util.Log;
 import arc.haldun.database.Sorting;
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
+import arc.haldun.database.driver.Connector;
 import arc.haldun.database.listener.OnBookProcessListener;
 import arc.haldun.database.objects.Book;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.adapters.BookAdapter;
+import arc.haldun.mylibrary.main.SplashScreenActivity;
 
 public class BookLoader {
 
@@ -71,7 +73,12 @@ public class BookLoader {
 
         mariaDB.resume();
 
-        handler.post(() -> manager.selectBook(sorting));
+        handler.post(() -> {
+
+            if (!Connector.isValid()) SplashScreenActivity.rConnectDatabase.run();
+
+            manager.selectBook(sorting);
+        });
 
     }
 

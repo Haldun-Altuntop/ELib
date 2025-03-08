@@ -55,7 +55,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     Tools.Update update;
     HandlerThread splashScreenThread;
-    Runnable rInitLanguage, rConnectDatabase, rCheckUpdates, rCheckUser, rNetwork;
+    public static Runnable rInitLanguage, rConnectDatabase, rCheckUpdates, rCheckUser, rNetwork;
     boolean hasUpdate = false;
     boolean isConnected;
 
