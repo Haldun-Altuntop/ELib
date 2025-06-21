@@ -13,6 +13,12 @@
     - Çevrimdışı mod etkin olduğunda güncellemeler kontrol edilmez.
     - Çevrimdışı mod etkin olduğunda çevrimdışı kullanıcı başlatılır.
     - Çevrimdışı mod etkin olduğunda istemci sürümü güncellenmez.
+    - Çevrimdışı mod etkin olduğunda oturum kapatılmaz.
+* `LibraryActivity`: Çevrimdışı mod için yalıtıldı.
+    - Çevrimdışı modun etkin olduğunu belirten text view eklendi.
+    - Çevrimdışı mod etkin olduğunda kitap yüklenmez.
+    - Çevrimdışı mod etkin olduğunda bildirimler kontrol edilmez.
+* Yeni string: `offline_mode_activated`
 
 # 1.12.12
 * `SplashScreenActivity`: Runnable objeleri _public_ ve _static_ yapıldı.

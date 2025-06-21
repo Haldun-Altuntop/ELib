@@ -68,6 +68,7 @@
     <string name="publication_year">Publication Year</string>
     <string name="other_information">Other Information</string>
     <string name="reserve">Reserve</string>
+    <string name="offline_mode_activated">Offline mode activated</string>
 
     <!-- Languages -->
     <string name="turkish" translatable="false">Türkçe</string>

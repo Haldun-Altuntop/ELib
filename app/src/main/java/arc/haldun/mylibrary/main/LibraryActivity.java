@@ -19,6 +19,7 @@ import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -55,6 +56,7 @@ import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.Tools.Preferences;
 import arc.haldun.mylibrary.adapters.BookAdapter;
+import arc.haldun.mylibrary.developer.DeveloperUtilities;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
 import arc.haldun.mylibrary.server.api.ELibUtilities;
 import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
@@ -90,6 +92,8 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
     JSONObject jsonBooks;
 
+    TextView tvOfflineModeActivated;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +110,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         boolean checkRememberMeAvailability = getIntent().getBooleanExtra("rememberMe", false);
         if (checkRememberMeAvailability) checkRememberMeAvailability();
 
-        checkUpdates();
+        //checkUpdates();
 
         //startBookLoader();
 
@@ -137,6 +141,11 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void loadBooks() {
+
+        if (DeveloperUtilities.isOffline) {
+            Log.i("LibraryActivity", "Çevrimdışı mod etkin olduğundan kitaplar yüklenmedi.");
+            return;
+        }
 
         Runnable rGetBooks = () -> {
 
@@ -396,6 +405,11 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
     private void getNotification() {
 
+        if (DeveloperUtilities.isOffline) {
+            Log.i("LibraryActivity", "Çevrimdışı mod etkin olduğundan bildirimler kontrol edilmedi.");
+            return;
+        }
+
         NotificationService notificationService = new NotificationService(this);
         notificationService.setOnTaskResultListener(notifications -> {
 
@@ -406,8 +420,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         });
 
         notificationService.start();
-
-
     }
 
     private void checkRememberMeAvailability() {
@@ -550,6 +562,10 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         fab_addBook = findViewById(R.id.activity_library_fab_addBook);
         relativeLayout = findViewById(R.id.activity_library_relative_layout);
         swipeRefreshLayout = findViewById(R.id.activity_library_swipe_refresh_layout);
+
+        tvOfflineModeActivated = findViewById(R.id.activity_library_tv_offline_mode_activated);
+        if (DeveloperUtilities.isOffline) tvOfflineModeActivated.setVisibility(View.VISIBLE);
+        else tvOfflineModeActivated.setVisibility(View.GONE);
 
         databaseManager = new Manager(new MariaDB());
 

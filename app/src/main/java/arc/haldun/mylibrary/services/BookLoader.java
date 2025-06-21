@@ -14,6 +14,7 @@ import arc.haldun.database.listener.OnBookProcessListener;
 import arc.haldun.database.objects.Book;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.adapters.BookAdapter;
+import arc.haldun.mylibrary.developer.DeveloperUtilities;
 import arc.haldun.mylibrary.main.SplashScreenActivity;
 
 public class BookLoader {
@@ -69,6 +70,11 @@ public class BookLoader {
 
     public void start() {
 
+        if (DeveloperUtilities.isOffline) {
+            Log.e("BookLoader", "Çevrimdışı mod etkin olduğunda Book Loader başlatılamaz.");
+            return;
+        }
+
         setSorting();
 
         mariaDB.resume();
@@ -83,6 +89,11 @@ public class BookLoader {
     }
 
     public void restart() {
+
+        if (DeveloperUtilities.isOffline) {
+            Log.e("BookLoader", "Çevrimdışı mod etkin olduğunda Book Loader yeniden başlatılamaz.");
+            return;
+        }
 
         handlerThread.quit();
         bookAdapter.reset();
@@ -107,16 +118,31 @@ public class BookLoader {
 
     public void resume() {
 
+        if (DeveloperUtilities.isOffline) {
+            Log.e("BookLoader", "Çevrimdışı mod etkin olduğunda Book Loader devam ettirilemez.");
+            return;
+        }
+
         mariaDB.resume();
 
     }
 
     public void pause() {
 
+        if (DeveloperUtilities.isOffline) {
+            Log.e("BookLoader", "Çevrimdışı mod etkin olduğunda Book Loader bekletilemez.");
+            return;
+        }
+
         mariaDB.pause();
     }
 
     public void stop() {
+
+        if (DeveloperUtilities.isOffline) {
+            Log.e("BookLoader", "Çevrimdışı mod etkin olduğunda Book Loader dururulamaz.");
+            return;
+        }
 
         manager.stopCurrentOperation();
     }

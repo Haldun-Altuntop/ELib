@@ -40,7 +40,7 @@ public class ErrorActivity extends AppCompatActivity {
 
         System.err.println(errorMessage);
 
-        if (errorCode == NETWORK_ERROR && DeveloperUtilities.isDeveloper) askForOfflineMode();
+        if (errorCode == NETWORK_ERROR && DeveloperUtilities.isDeveloper && !DeveloperUtilities.isOffline) askForOfflineMode();
 
         tv_errorMessage.setText(errorMessage);
         btn_report.setOnClickListener(this::reportError);

@@ -179,6 +179,12 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             new Thread(() -> {
 
                 try {
+
+                    if (DeveloperUtilities.isOffline) {
+                        Log.i("LibraryActivity", "Çevrimdışı mod etkin olduğundan oturum kapatılmadı.");
+                        return;
+                    }
+
                     ELibUtilities.quit();
                 } catch (IOException | JSONException e) {
                     throw new RuntimeException(e);
@@ -191,7 +197,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private void updateClientVersion() {
 
         if (DeveloperUtilities.isOffline) {
-            Log.i("Homepage Activity", "Çevrimdışı mod etkin olduğundan istemci sürümü güncellenmedi.");
+            Log.i("HomepageActivity", "Çevrimdışı mod etkin olduğundan istemci sürümü güncellenmedi.");
             return;
         }
 
