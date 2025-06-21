@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -13,8 +14,10 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import arc.haldun.mylibrary.Tools;
+import arc.haldun.mylibrary.main.ErrorActivity;
 
 public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
 
@@ -66,7 +69,11 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
 
             writeExceptionToFile(e);
 
-            Tools.startErrorActivity(context, (Exception) e);
+            if (Objects.requireNonNull(e.getMessage()).contains("SocketTimeoutException")) {
+                Tools.startErrorActivity(context, (Exception) e, ErrorActivity.NETWORK_ERROR);
+            }
+            else
+                Tools.startErrorActivity(context, (Exception) e, ErrorActivity.UNKNOWN_ERROR);
 
         });
 

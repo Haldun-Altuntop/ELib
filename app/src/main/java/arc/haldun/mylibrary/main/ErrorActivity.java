@@ -15,13 +15,16 @@ import java.io.FileNotFoundException;
 
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
+import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.bug.BugReporter;
+import arc.haldun.mylibrary.developer.DeveloperUtilities;
 import arc.haldun.mylibrary.server.api.ELibUtilities;
 
 public class ErrorActivity extends AppCompatActivity {
 
     public static final int UNKNOWN_ERROR = 0;
     public static final int FILE_SERVICE_ERROR = 1;
+    public static final int NETWORK_ERROR = 2;
 
     String errorMessage;
     int errorCode;
@@ -37,9 +40,30 @@ public class ErrorActivity extends AppCompatActivity {
 
         System.err.println(errorMessage);
 
+        if (errorCode == NETWORK_ERROR && DeveloperUtilities.isDeveloper) askForOfflineMode();
+
         tv_errorMessage.setText(errorMessage);
         btn_report.setOnClickListener(this::reportError);
         btn_restart.setOnClickListener(this::restartApp);
+    }
+
+    private void askForOfflineMode() {
+
+        Tools.showDialog(
+                this,
+                "Hata Ayıklama",
+                "Çevrimdışı mod açılsın mı?",
+                "Evet", "Hayır",
+                (dialogInterface, i) -> {
+                    DeveloperUtilities.isOffline = true;
+                    Log.i("ErrorActivity", "Offline mode is enabled.");
+
+                    // Restart app
+                    restartApp(null);
+                },
+                null
+        );
+
     }
 
     private void reportError(View view) {
@@ -65,7 +89,7 @@ public class ErrorActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
-        Runtime.getRuntime().exit(0);
+        //Runtime.getRuntime().exit(0);
     }
 
     void init() {

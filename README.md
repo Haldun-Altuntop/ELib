@@ -1,5 +1,15 @@
 # E-Lib
 
+# 1.12.13
+* `DeveloperUtilities` sınıfı oluşturuldu.
+* `DeveloperUtilities`: 
+  - Uygulama debug sürümündeyken geliştiricinin testlerini kolaylaştırmak için gerekli değişkenleri içerir
+* `ErrorActivity`: 
+  - Hata mesajı eklendi (_NETWORK_ERROR = 2_)
+  - Hata ayıklama sürümünde _NETWORK_ERROR_ hatası alırsa çevrimdışı mod için sorar.
+* `Tools`: _showDialog(Context, String, String, String, String, DialogInterface.OnClickListener, DialogInterface.OnClickListener)_ metodu eklendi.
+* `UncaughtExceptionHandler`: _ErrorActivity_'ye hata kodu gönderilir.
+
 # 1.12.12
 * `SplashScreenActivity`: Runnable objeleri _public_ ve _static_ yapıldı.
 * `BookLoader`: Hizmet başlatılırken bağlantı kontrol edilir. `bkz: start()`

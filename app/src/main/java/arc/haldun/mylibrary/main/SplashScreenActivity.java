@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,6 +36,7 @@ import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
+import arc.haldun.mylibrary.developer.DeveloperUtilities;
 import arc.haldun.mylibrary.exceptions.UncaughtExceptionHandler;
 import arc.haldun.mylibrary.server.api.ELibUtilities;
 import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
@@ -78,6 +80,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         // Animasyonun tamamlanmasını bekliyoruz (1 saniye)
         handlerBackground.postDelayed(rNetwork, 1000);
+
+        // Uygulama debug modundaysa bazı geliştirici özellilerini kullanmak için işlem yapıyoruz
+        if (BuildConfig.DEBUG) {
+            DeveloperUtilities.isDeveloper = true;
+        }
 
     }
 
@@ -313,7 +320,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         rCheckUser2 = () -> {
 
             try {
-                hasSession = ELibUtilities.checkSession();
+                if (!DeveloperUtilities.isOffline) {
+                    hasSession = ELibUtilities.checkSession();
+                } else hasSession = true;
+
             } catch (IOException | JSONException e) {
                 throw new RuntimeException(e);
             }

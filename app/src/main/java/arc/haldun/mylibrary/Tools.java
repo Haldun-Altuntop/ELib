@@ -2,10 +2,13 @@ package arc.haldun.mylibrary;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +23,28 @@ public class Tools {
 
     public static void makeText(Context c, String message) {
         Toast.makeText(c, message, Toast.LENGTH_LONG).show();
+    }
+
+    public static void showDialog(Context context, String title, String message,
+                                  String positiveButton, String negativeButton,
+                                  DialogInterface.OnClickListener onPositiveClick,
+                                  DialogInterface.OnClickListener onNegativeClick) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setTitle(title)
+                .setMessage(message);
+
+        if (positiveButton != null) {
+            builder.setPositiveButton(positiveButton, onPositiveClick);
+        }
+
+        if (negativeButton != null) {
+            builder.setNegativeButton(negativeButton, onNegativeClick);
+        }
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public static Update hasUpdate(Activity activity) {
