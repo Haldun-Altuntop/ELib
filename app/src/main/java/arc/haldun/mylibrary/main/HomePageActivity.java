@@ -33,6 +33,7 @@ import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
+import arc.haldun.mylibrary.developer.DeveloperUtilities;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
 import arc.haldun.mylibrary.server.api.ELibUtilities;
 import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
@@ -88,6 +89,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     private void checkUpdates() {
 
+        // Eğer offline ise güncellemeyi engelle.
+        if (DeveloperUtilities.isOffline) {
+
+            Log.i("HomePageActivity", "Çevrimdışı mod etkin olduğundan güncellemeler kontrol edilmedi");
+            return;
+        }
+
         new Thread(() -> {
 
             try {
@@ -107,6 +115,21 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void initUser() {
+
+        if (DeveloperUtilities.isOffline) {
+
+            User offlineUser = new User();
+            offlineUser.setName("Offline User");
+            offlineUser.setEMail("offlineuser@mylibrary.com");
+            offlineUser.setPassword("123456789");
+            offlineUser.setPriority(User.Priority.DEVELOPER);
+
+            CurrentUser.user = offlineUser;
+
+            Log.i("HomePageActivity", "Çevrimdışı user başlatıldı.");
+
+            return;
+        }
 
         Thread t = new Thread(() -> {
 
@@ -166,6 +189,11 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void updateClientVersion() {
+
+        if (DeveloperUtilities.isOffline) {
+            Log.i("Homepage Activity", "Çevrimdışı mod etkin olduğundan istemci sürümü güncellenmedi.");
+            return;
+        }
 
         if (firebaseUserService.hasLoggedInUser()) { // Giriş yapmış kullanıcı varsa
 

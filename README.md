@@ -9,6 +9,10 @@
   - Hata ayıklama sürümünde _NETWORK_ERROR_ hatası alırsa çevrimdışı mod için sorar.
 * `Tools`: _showDialog(Context, String, String, String, String, DialogInterface.OnClickListener, DialogInterface.OnClickListener)_ metodu eklendi.
 * `UncaughtExceptionHandler`: _ErrorActivity_'ye hata kodu gönderilir.
+* `HomePageActivity`: Çevrimdışı mod için yalıtıldı.
+    - Çevrimdışı mod etkin olduğunda güncellemeler kontrol edilmez.
+    - Çevrimdışı mod etkin olduğunda çevrimdışı kullanıcı başlatılır.
+    - Çevrimdışı mod etkin olduğunda istemci sürümü güncellenmez.
 
 # 1.12.12
 * `SplashScreenActivity`: Runnable objeleri _public_ ve _static_ yapıldı.
