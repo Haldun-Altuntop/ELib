@@ -76,6 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/remember_me"
+        android:checked="false"
+        android:enabled="true"
         android:layout_marginTop="10dp"
         android:layout_below="@id/activity_login_layout_button"
         android:layout_marginHorizontal="45dp"/>

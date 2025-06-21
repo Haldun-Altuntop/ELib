@@ -2,16 +2,21 @@ package arc.haldun.mylibrary.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.FileNotFoundException;
 
+import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.bug.BugReporter;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
 
 public class ErrorActivity extends AppCompatActivity {
 
@@ -39,23 +44,22 @@ public class ErrorActivity extends AppCompatActivity {
 
     private void reportError(View view) {
 
-        runOnUiThread(() -> {
-            BugReporter bugReporter = new BugReporter(getApplicationContext(), errorMessage);
-            bugReporter.reportBug();
-        });
+        Log.e("ErrorActivity", errorMessage);
 
-        System.err.println(errorMessage);
+        new Thread(() -> {
+            ELibUtilities.addError(errorMessage, "");
+
+            Looper.prepare();
+
+            // FIXME: 21.03.2025 -> Diyalog ile iyileştir. Kullanıcıdan ilave mesaj alınacak.
+            Toast.makeText(this, "Geri ildiriminiz için teşekkür ederiz.", Toast.LENGTH_SHORT).show();
+        }).start();
+
+        btn_report.setEnabled(false);
+
     }
 
     private void restartApp(View view) {
-
-        if (errorCode == FILE_SERVICE_ERROR) {
-            try {
-                openFileOutput("temporary.e-lib", MODE_PRIVATE);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
 
         Intent intent = new Intent(this, SplashScreenActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

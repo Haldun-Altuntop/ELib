@@ -75,7 +75,7 @@ public class AddBookActivity extends AppCompatActivity {
                 book.setName(bookName);
                 book.setAuthor(author);
                 book.setContributor(CurrentUser.user);
-                book.setRegistrationDate(new DateTime());
+                book.setRegistrationDate(arc.haldun.time.DateTime.now());
 
                 Manager manager = new Manager(new MariaDB());
                 manager.addBook(book);

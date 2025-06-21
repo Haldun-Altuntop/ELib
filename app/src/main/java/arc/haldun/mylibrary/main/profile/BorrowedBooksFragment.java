@@ -23,6 +23,8 @@ import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.adapters.BookAdapter;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
+import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,8 +84,11 @@ public class BorrowedBooksFragment extends Fragment {
 
                 Book book = null;
                 try {
-                    book = new MariaDB().getBook(CurrentUser.user.getBorrowedBook());
-                } catch (OperationFailedException e) {
+                    //book = new MariaDB().getBook(CurrentUser.user.getBorrowedBook());
+
+                    book = new Book(ELibUtilities.getBorrowedBook());
+
+                } catch (UnauthorizedUserException e) {
                     throw new RuntimeException(e);
                 }
 

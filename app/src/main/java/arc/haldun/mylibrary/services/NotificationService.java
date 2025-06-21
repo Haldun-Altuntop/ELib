@@ -11,6 +11,9 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,6 +28,8 @@ import arc.haldun.database.driver.IDatabase;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.Notification;
 import arc.haldun.mylibrary.R;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
+import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
 
 public class NotificationService {
 
@@ -54,7 +59,22 @@ public class NotificationService {
 
         Thread networkThread = new Thread(() -> {
 
-            notifications = databaseManager.getNotification(CurrentUser.user.getId());
+            //notifications = databaseManager.getNotification(CurrentUser.user.getId());
+
+            try {
+                JSONObject notificationsJson = ELibUtilities.getNotifications();
+
+                notifications = new Notification[notificationsJson.length()];
+
+                for (int i = 0; i < notificationsJson.length(); i++) {
+
+                    Notification notification = new Notification(notificationsJson.getJSONObject(String.valueOf(i)));
+                    notifications[i] = notification;
+                }
+
+            } catch (UnauthorizedUserException | JSONException e) {
+                throw new RuntimeException(e);
+            }
 
             Runnable runnable = () -> onTaskResultListener.onTaskResult(notifications);
             handler.post(runnable);

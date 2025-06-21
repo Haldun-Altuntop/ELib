@@ -84,11 +84,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.MyViewHolder> 
                 .putExtra("page", currentBook.getPage())
                 .putExtra("type", currentBook.getType())
                 .putExtra("asset_number", currentBook.getAssetNumber())
-                .putExtra("registration_date", currentBook.getRegistrationDate())
+                .putExtra("registration_date", currentBook.getRegistrationDate().toString())
                 .putExtra("cabinet_number", currentBook.getCabinetNumber())
                 .putExtra("popularity", currentBook.getPopularity());
 
-            intent.putExtra("book", currentBook);
+            //intent.putExtra("book", currentBook);
+
+            intent.putExtra("bookJsonString", currentBook.toJson().toString());
 
             rootActivity.startActivity(intent);
         });

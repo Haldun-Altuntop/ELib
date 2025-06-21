@@ -1,7 +1,10 @@
 package arc.haldun.mylibrary.main;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -16,6 +20,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Objects;
 
 import arc.haldun.database.database.Manager;
@@ -26,6 +34,8 @@ import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
+import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
 import arc.haldun.mylibrary.services.FirebaseUserService;
 import arc.haldun.mylibrary.settings.SettingsActivity;
 
@@ -34,6 +44,8 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     private Manager databaseManager;
     private Toolbar actionBar;
     private CardView cardProfile, cardSettings, cardSearch, cardFriends, cardLogout, cardRequests;
+
+    private Runnable rNewVersionAvailable;
 
     private FirebaseUserService firebaseUserService;
 
@@ -48,7 +60,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             return insets;
         });
 
+        initUser();
         init();
+        checkUpdates();
 
         // Set action bar
         setSupportActionBar(actionBar);
@@ -65,12 +79,55 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         cardLogout.setOnClickListener(this);
         cardRequests.setOnClickListener(this);
 
-        if (Objects.equals(CurrentUser.user.getPriority(), User.USER)) {
+        if (Objects.equals(CurrentUser.user.getPriority(), User.Priority.USER)) {
             cardRequests.setVisibility(View.INVISIBLE);
         }
 
-        setUserStateOnline();
         updateClientVersion();
+    }
+
+    private void checkUpdates() {
+
+        new Thread(() -> {
+
+            try {
+                int versionCode = ELibUtilities.getVersionCode();
+
+                if (versionCode > BuildConfig.VERSION_CODE) {
+                    Log.i("SplashScreen", "New version available (" + versionCode + ")");
+
+                    runOnUiThread(rNewVersionAvailable);
+                }
+            } catch (UnauthorizedUserException e) {
+                startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+                finish();
+                e.printStackTrace(System.err);
+            }
+        }).start();
+    }
+
+    private void initUser() {
+
+        Thread t = new Thread(() -> {
+
+            try {
+
+                JSONObject userJson = ELibUtilities.getUser();
+
+                CurrentUser.user = new User(userJson);
+
+            } catch (UnauthorizedUserException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        t.start();
+
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -87,7 +144,25 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
 
-        setUserStateOffline();
+        //
+        // Check remember me
+        //
+        Tools.Preferences preferencesTool = new Tools.Preferences(
+                getSharedPreferences(Tools.Preferences.NAME, MODE_PRIVATE));
+        boolean rememberMe = preferencesTool.getBoolean(Tools.Preferences.Keys.REMEMBER_ME);
+
+        if (!rememberMe) {
+
+            new Thread(() -> {
+
+                try {
+                    ELibUtilities.quit();
+                } catch (IOException | JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+            }).start();
+        }
     }
 
     private void updateClientVersion() {
@@ -112,16 +187,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
             Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
             startActivity(intent); // WelcomeActivity'ye yönlendir
         }
-    }
-
-    private void setUserStateOffline() {
-
-        new Thread(() -> databaseManager.setUserState(CurrentUser.user, User.State.OFFLINE)).start();
-    }
-
-    private void setUserStateOnline() {
-
-        new Thread(() -> databaseManager.setUserState(CurrentUser.user, User.State.ONLINE)).start();
     }
 
     private void startSuspendedActivity() {
@@ -180,10 +245,16 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         );
         preferencesTool.setValue(Tools.Preferences.Keys.REMEMBER_ME, false);
 
-        //new FirebaseUserService().signOut();
         firebaseUserService.signOut();
 
-        //CurrentUser.user = null;
+
+        new Thread(() -> {
+            try {
+                ELibUtilities.quit();
+            } catch (IOException | JSONException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
 
         // Prepare intent
         Intent intWelcomeActivity = new Intent(getApplicationContext(), WelcomeActivity.class);
@@ -203,6 +274,36 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         cardFriends = findViewById(R.id.activity_home_page_cardview_friends);
         cardLogout = findViewById(R.id.activity_home_page_cardview_logout);
         cardRequests = findViewById(R.id.activity_home_page_cardview_requests);
+
+        rNewVersionAvailable = () -> {
+            DialogInterface.OnClickListener onDialogPositiveClick = (dialogInterface, i) -> {
+
+                //
+                // Redirect download page
+                //
+                String url = "http://haldun.online";
+
+                try {
+                    Intent intentBrowser = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    intentBrowser.addCategory(Intent.CATEGORY_BROWSABLE);
+                    intentBrowser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intentBrowser);
+                } catch (ActivityNotFoundException e) {
+
+                    Log.e("LibraryActivity", "", e);
+
+                }
+            };
+
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(HomePageActivity.this);
+            dialogBuilder.setTitle(getString(R.string.update))
+                    .setMessage(getString(R.string.new_version_released))
+                    .setPositiveButton(getString(R.string.download), onDialogPositiveClick)
+                    .setNegativeButton(getString(R.string.cancel), null);
+
+            AlertDialog dialog = dialogBuilder.create();
+            dialog.show();
+        };
 
         firebaseUserService = new FirebaseUserService();
     }

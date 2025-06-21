@@ -1,5 +1,6 @@
 package arc.haldun.mylibrary.main.profile;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +17,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.Book;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.adapters.BookAdapter;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
+import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +49,8 @@ public class ContributionFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Thread networkThread;
 
     public ContributionFragment() {
         // Required empty public constructor
@@ -88,7 +96,7 @@ public class ContributionFragment extends Fragment {
         init(view);
 
 
-        Thread networkThread = new Thread(this::initBooks);
+        networkThread = new Thread(this::initBooks);
         networkThread.start();
 
     }
@@ -102,9 +110,25 @@ public class ContributionFragment extends Fragment {
 
     private void initBooks() {
 
-        books = databaseManager.getContribution(CurrentUser.user);
+        //books = databaseManager.getContribution(CurrentUser.user);
 
-        requireActivity().runOnUiThread(this::listContribution);
+        try {
+
+            JSONObject contributionJson = ELibUtilities.getContribution();
+            books = new Book[contributionJson.length()];
+
+            for (int i = 0; i < books.length; i++) {
+
+                books[i] = new Book(contributionJson.getJSONObject(String.valueOf(i)));
+
+            }
+
+        } catch (UnauthorizedUserException | JSONException e) {
+            throw new RuntimeException(e);
+        }
+
+        Activity activity = getActivity();
+        if (activity != null) activity.runOnUiThread(this::listContribution);
     }
 
     private void listContribution() {

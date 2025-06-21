@@ -22,6 +22,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONObject;
+
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.Book;
@@ -30,6 +32,7 @@ import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -113,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 // Şifreler uyuşmuyorsa
                 else if (!password.equals(password2)) Toast.makeText(this, getString(R.string.passwords_dont_match), Toast.LENGTH_SHORT).show();
 
-                else register(username, email, password);
+                else register2(username, email, password);
             }
         }
     }
@@ -139,6 +142,28 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return super.onOptionsItemSelected(item);
     }
 
+    private void register2(String username, String email, String password) {
+
+        new Thread(() -> {
+
+            JSONObject jsonObject = ELibUtilities.register(username, email, password);
+            boolean res = jsonObject.optBoolean("result");
+
+           runOnUiThread(() -> {
+
+               if (res) {
+                   Toast.makeText(this, "Kaydınız tamamlandı. Lütfen giriş yapınız.", Toast.LENGTH_LONG).show();
+                   startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                   finish();
+               } else {
+                   Toast.makeText(this, "Kaydınızı tamamlayamadık. Bir süre sonra tekrar deneyin", Toast.LENGTH_LONG).show();
+               }
+           });
+
+        }).start();
+
+    }
+
     private void register(String username, String email, String password) {
 
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -151,7 +176,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         @Override
                         public void run() {
                             User user = new User(firebaseAuth.getUid(), username, password, email, String.valueOf(BuildConfig.VERSION_CODE), User.Priority.USER,
-                                    new DateTime(), new DateTime(), 0);
+                                    arc.haldun.time.DateTime.now(), arc.haldun.time.DateTime.now(), 0);
 
                             Manager manager = new Manager(new MariaDB());
                             manager.addUser(user);

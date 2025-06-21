@@ -37,7 +37,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -52,6 +56,8 @@ import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.Tools.Preferences;
 import arc.haldun.mylibrary.adapters.BookAdapter;
 import arc.haldun.mylibrary.main.profile.ProfileActivity;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
+import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
 import arc.haldun.mylibrary.services.BookLoader;
 import arc.haldun.mylibrary.services.FirebaseUserService;
 import arc.haldun.mylibrary.services.NotificationService;
@@ -82,6 +88,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     Sorting lastSetSorting;
     Preferences preferencesTool;
 
+    JSONObject jsonBooks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +98,8 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         setupActionbar();
 
+        loadBooks();
+
         //
         // Check remember me availability
         //
@@ -99,7 +108,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         checkUpdates();
 
-        startBookLoader();
+        //startBookLoader();
 
         //
         // Get notification
@@ -125,6 +134,49 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         bookLoader.start();
 
+    }
+
+    private void loadBooks() {
+
+        Runnable rGetBooks = () -> {
+
+            try {
+
+                jsonBooks = ELibUtilities.selectBook();
+
+                Book[] books = jsonToBooks(jsonBooks);
+
+                runOnUiThread(() -> {
+                    bookAdapter = new BookAdapter(LibraryActivity.this, books);
+                    initRecyclerView();
+                });
+
+            } catch (IOException | JSONException e) {
+                throw new RuntimeException(e);
+            } catch (UnauthorizedUserException e) {
+
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                finish();
+            }
+
+        };
+
+        Thread thread = new Thread(rGetBooks);
+        thread.start();
+
+    }
+
+    private Book[] jsonToBooks(JSONObject jsonBooks) throws JSONException {
+
+        Book[] books = new Book[jsonBooks.length()];
+
+        for (int i = 0; jsonBooks.has(String.valueOf(i)); i++) {
+
+            books[i] = new Book(jsonBooks.getJSONObject(String.valueOf(i)));
+
+        }
+
+        return books;
     }
 
     private void setupActionbar() {
@@ -166,17 +218,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        //
-        // Check remember me
-        //
-        Tools.Preferences preferencesTool = new Tools.Preferences(
-                getSharedPreferences(Tools.Preferences.NAME, MODE_PRIVATE));
-        boolean rememberMe = preferencesTool.getBoolean(Tools.Preferences.Keys.REMEMBER_ME);
-
-        if (!rememberMe) {
-            firebaseUserService.signOut();
-        }
 
         //
         // Stop book loader
@@ -311,6 +352,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    @Deprecated(since = "moved to HomePageActivity")
     private void checkUpdates() {
 
         boolean hasUpdate = getIntent().getBooleanExtra("hasUpdate", false);
@@ -479,6 +521,23 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void initRecyclerView() {
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
+
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.item_animation_fall_down);
+        LayoutAnimationController layoutAnimationController = new LayoutAnimationController(animation);
+
+        //bookAdapter = new BookAdapter(this, new ArrayList<Book>().toArray(new Book[0]));
+
+        recyclerView.setLayoutAnimation(layoutAnimationController);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(bookAdapter);
+
+        progressBar.setVisibility(View.GONE);
+    }
+
     private void init() {
 
         //firebaseAuth = FirebaseAuth.getInstance();
@@ -497,19 +556,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         //
         // Recycler View
         //
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
-
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.item_animation_fall_down);
-        LayoutAnimationController layoutAnimationController = new LayoutAnimationController(animation);
-
-        bookAdapter = new BookAdapter(this, new ArrayList<Book>().toArray(new Book[0]));
-
-        recyclerView.setLayoutAnimation(layoutAnimationController);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(bookAdapter);
-
-        progressBar.setVisibility(View.GONE);
+        initRecyclerView();
 
         swipeRefreshLayout.setRefreshing(false);
 
@@ -522,6 +569,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
         positionChangeListener = (position) -> {
 
+            /*
             Log.i("BookAdapter", "position: " + position);
 
             if ((position % BookLoader.RANGE == 0 && position >= lastMaxPos - 10) || position == bookAdapter.getItemCount() - 2) {
@@ -538,6 +586,7 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             if (position < lastMaxPos) {
                 Log.e("HaldununLogu", "Şu anda maks gittiğiniz indexten aşağıdasınız. Last max index: " + lastMaxPos);
             }
+             */
         };
     }
 }

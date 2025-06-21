@@ -15,6 +15,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import arc.haldun.database.objects.Book;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
@@ -41,6 +44,7 @@ public class OtherInformationActivity
             return insets;
         });
         init();
+        initBook();
 
         tv_bookName.setText(book.getName());
         tv_id.setText(String.valueOf(book.getId()));
@@ -48,7 +52,7 @@ public class OtherInformationActivity
         tv_assetNumber.setText(book.getAssetNumber());
         tv_popularity.setText(String.valueOf(book.getPopularity()));
         tv_owner.setText(book.getContributor().getName());
-        tv_regDate.setText(book.getRegistrationDate().getDate());
+        tv_regDate.setText(book.getRegistrationDate().toString());
 
         btn_edit.setOnClickListener(this);
     }
@@ -59,6 +63,27 @@ public class OtherInformationActivity
         if (view.equals(btn_edit)) {
             // TODO: start edit activity
             Tools.makeText(getApplicationContext(), getString(R.string.not_supported_yet));
+        }
+    }
+
+    private void initBook() {
+
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+
+            try {
+
+                String bookStr = extras.getString("bookJsonString");
+
+                if (bookStr != null) {
+                    JSONObject bookJson = new JSONObject(bookStr);
+                    book = new Book(bookJson);
+                }
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -75,7 +100,5 @@ public class OtherInformationActivity
         tv_regDate = findViewById(R.id.activity_other_information_tv_reg_date);
 
         btn_edit = findViewById(R.id.activity_other_information_btn_edit);
-
-        book = (Book) getIntent().getSerializableExtra("book");
     }
 }

@@ -22,6 +22,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -30,6 +33,7 @@ import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.Request;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.adapters.RequestAdapter;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
 
 public class RequestsActivity extends AppCompatActivity {
 
@@ -70,7 +74,7 @@ public class RequestsActivity extends AppCompatActivity {
 
         new Thread(() -> {
 
-            databaseManager.selectRequest(this::onRequestProcess);
+            //databaseManager.selectRequest(this::onRequestProcess);
             /*
             RequestAdapter requestAdapter = new RequestAdapter(
                     new ArrayList<>(
@@ -78,6 +82,15 @@ public class RequestsActivity extends AppCompatActivity {
                     )
             );
              */
+
+            JSONObject requestsJson = ELibUtilities.getPendingRequests();
+
+            for (int i = 0; i < requestsJson.length(); i++) {
+                JSONObject requestJson = requestsJson.optJSONObject(String.valueOf(i));
+                if (requestJson == null) continue;
+                Request  request = new Request();
+                requests.add(request);
+            }
 
             Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(() -> {

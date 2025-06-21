@@ -22,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.exception.OperationFailedException;
@@ -31,6 +34,8 @@ import arc.haldun.database.objects.DateTime;
 import arc.haldun.database.objects.Request;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.R;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
+import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
 
 public class BookDetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -110,7 +115,7 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
     private void startOtherInformationActivity() {
 
         Intent intent = new Intent(getApplicationContext(), OtherInformationActivity.class);
-        intent.putExtra("book", currentBook);
+        intent.putExtra("bookJsonString", currentBook.toJson().toString());
         startActivity(intent);
     }
 
@@ -157,7 +162,7 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
             try {
                 Thread.sleep(100);
-                databaseManager.addBookLog(currentBook, CurrentUser.user, new DateTime());
+                //databaseManager.addBookLog(currentBook, CurrentUser.user, new DateTime());
             } catch (InterruptedException e) {
                 Log.e("BookDetailsActivity", "Kitap kaydı eklenemedi. Thread hatalıydı.");
             }
@@ -170,26 +175,6 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
             btn_reserve.setText("Bu kitap kullanımda");
 
-            new Thread(() -> {
-
-                User user = null;
-                try {
-                    user = databaseManager.getUser(currentBook.getBorrowedBy());
-                } catch (OperationFailedException e) {
-                    throw new RuntimeException(e);
-                }
-
-                User finalUser = user;
-                /*
-                new Handler(Looper.getMainLooper())
-                        .post(() -> tv_availability.setText(
-                                String.format("Bu kitap %s tarafından okunuyor", finalUser.getName())
-                        ));
-                 */
-            }).start();
-
-        } else {
-            //tv_availability.setText("Müsait");
         }
     }
 
@@ -220,15 +205,34 @@ public class BookDetailsActivity extends AppCompatActivity implements View.OnCli
 
         if (extras != null) {
 
-            currentBook = (Book) extras.get("book");
+            try {
+
+                String bookStr = extras.getString("bookJsonString");
+
+                if (bookStr != null) {
+
+                    JSONObject bookJson = new JSONObject(bookStr);
+
+                    currentBook = new Book(bookJson);
+
+                } else {
+                    Toast.makeText(this, "Kitap seçilmemiş", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+
+            } catch (JSONException e) {
+                Toast.makeText(this, "Kitap bilgileri hatalı", Toast.LENGTH_SHORT).show();
+                finish();
+            }
 
             new Thread(() -> {
 
-                // FIXME: 1.06.2024 -> popülerlik arttırılırken veritabaındaki değişkene doğrudan erişilmeli
-
-                currentBook.increasePopularity();
-
-                databaseManager.updateBook(currentBook);
+                try {
+                    ELibUtilities.increaseBookPopularity(currentBook);
+                } catch (UnauthorizedUserException e) {
+                    throw new RuntimeException(e);
+                }
 
             }).start();
 

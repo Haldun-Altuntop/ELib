@@ -16,5 +16,22 @@
       "outputFile": "e-kutup-release-1.12.12.apk"
     }
   ],
-  "elementType": "File"
+  "elementType": "File",
+  "baselineProfiles": [
+    {
+      "minApi": 28,
+      "maxApi": 30,
+      "baselineProfiles": [
+        "baselineProfiles/1/e-kutup-release-1.12.12.dm"
+      ]
+    },
+    {
+      "minApi": 31,
+      "maxApi": 2147483647,
+      "baselineProfiles": [
+        "baselineProfiles/0/e-kutup-release-1.12.12.dm"
+      ]
+    }
+  ],
+  "minSdkVersionForDexing": 24
 }

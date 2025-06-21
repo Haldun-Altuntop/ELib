@@ -19,6 +19,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -30,12 +32,12 @@ import arc.haldun.database.Sorting;
 import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.driver.Connector;
 import arc.haldun.database.objects.CurrentUser;
-import arc.haldun.database.objects.DateTime;
-import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.BuildConfig;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.exceptions.UncaughtExceptionHandler;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
+import arc.haldun.mylibrary.server.api.UnauthorizedUserException;
 import arc.haldun.mylibrary.services.FirebaseUserService;
 import arc.haldun.mylibrary.settings.SettingsActivity;
 
@@ -50,18 +52,15 @@ public class SplashScreenActivity extends AppCompatActivity {
     AlertDialog.Builder dialogBuilder;
     DialogInterface.OnClickListener onDialogPositiveClick, onDialogNegativeClick;
 
-    Thread threadMain, threadNetwork;
     Handler handlerMain, handlerBackground;
 
-    Tools.Update update;
     HandlerThread splashScreenThread;
-    public static Runnable rInitLanguage, rConnectDatabase, rCheckUpdates, rCheckUser, rNetwork;
+    public static Runnable rInitLanguage, rConnectDatabase, rCheckUpdates, rCheckUpdates2, rCheckUser, rCheckUser2, rNetwork;
     boolean hasUpdate = false;
     boolean isConnected;
+    boolean hasSession;
 
     String url = "https://drive.google.com/drive/folders/1Wd95pcUJ6UDVsEp_xYjDrQrEwk3fJvCm?usp=sharing";
-
-    public static User[] users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,34 +68,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         init();
 
+        ELibUtilities.initContext(getApplicationContext());
+
         splashScreenThread.start();
-
         handlerBackground = new Handler(splashScreenThread.getLooper());
-
-        // Animasyonun tamamlanmasını bekliyoruz (1 saniye)
-        handlerBackground.postDelayed(rNetwork, 1000);
-
-        Tools.Preferences preferencesTool = new Tools.Preferences(getSharedPreferences(
-                Tools.Preferences.NAME, Context.MODE_PRIVATE));
-
-        try {
-
-            int sortingStringValue = preferencesTool
-                    .getInt(Tools.Preferences.Keys.BOOK_SORTING_TYPE);
-
-            if (sortingStringValue == -1) {
-
-                preferencesTool.setValue(Tools.Preferences.Keys.BOOK_SORTING_TYPE, Sorting.OLD_TO_NEW.getIndex());
-
-            }
-
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            preferencesTool.setValue(Tools.Preferences.Keys.BOOK_SORTING_TYPE, Sorting.OLD_TO_NEW.getIndex());
-        }
 
         Thread.setDefaultUncaughtExceptionHandler(
                 new UncaughtExceptionHandler(getApplicationContext()));
+
+        // Animasyonun tamamlanmasını bekliyoruz (1 saniye)
+        handlerBackground.postDelayed(rNetwork, 1000);
 
     }
 
@@ -104,8 +85,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         handlerMain.post(() -> {
 
-            textView.setText(name);
             progressBar.setProgress(percent);
+            textView.setText(name);
 
         });
 
@@ -116,12 +97,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         textView = findViewById(R.id.textView);
         progressBar = findViewById(R.id.activity_splashscreen_progressBar);
 
-        //server = new mObservable();
-        //client = new mObserver();
         handlerMain = new Handler(Looper.getMainLooper());
-
-        //firebaseAuth = FirebaseAuth.getInstance();
-        //firebaseUser = firebaseAuth.getCurrentUser();
 
         splashScreenThread = new HandlerThread("SplashScreenActivityThread");
 
@@ -148,36 +124,52 @@ public class SplashScreenActivity extends AppCompatActivity {
                 intentBrowser.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intentBrowser);
             } catch (ActivityNotFoundException e) {
-                e.printStackTrace();
+                e.printStackTrace(System.err);
             }
         };
 
-        /**
-         * Runnable
-         */
-
+        //
+        // Runnable
+        //
         rNetwork = () -> {
 
-            setProcess("Initializing language", 20);
-            rInitLanguage.run();
+            setProcess("Reading preferences", 20);
+            Tools.Preferences preferencesTool = new Tools.Preferences(getSharedPreferences(
+                    Tools.Preferences.NAME, Context.MODE_PRIVATE));
 
-            setProcess("Connecting database", 40);
-            rConnectDatabase.run();
+            try {
 
-            if (!isConnected) {
-                Tools.startErrorActivity(
-                        getApplicationContext(),
-                        new Exception("Veritabanına bağlanılamadı.")
-                );
-                return;
+                setProcess("Reading preferences", 40);
+                int sortingStringValue = preferencesTool
+                        .getInt(Tools.Preferences.Keys.BOOK_SORTING_TYPE);
+
+                if (sortingStringValue == -1) {
+
+                    preferencesTool.setValue(Tools.Preferences.Keys.BOOK_SORTING_TYPE, Sorting.OLD_TO_NEW.getIndex());
+
+                }
+
+            } catch (RuntimeException e) {
+                e.printStackTrace(System.err);
+                preferencesTool.setValue(Tools.Preferences.Keys.BOOK_SORTING_TYPE, Sorting.OLD_TO_NEW.getIndex());
             }
 
-            setProcess("Checking udates", 60);
-            rCheckUpdates.run();
+            setProcess("Initializing language", 60);
+            rInitLanguage.run();
 
             setProcess("Check logged in user", 80);
-            rCheckUser.run();
+            //rCheckUser.run();
+            rCheckUser2.run();
 
+            if (hasSession) {
+                setProcess("Starting", 100);
+                startActivity(new Intent(getApplicationContext(), HomePageActivity.class));
+                finish();
+            } else {
+                setProcess("Welcome", 100);
+                startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+                finish();
+            }
         };
 
         rInitLanguage = () -> {
@@ -233,6 +225,23 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         };
 
+        rCheckUpdates2 = () -> {
+
+            try {
+                int versionCode = ELibUtilities.getVersionCode();
+
+                if (versionCode > BuildConfig.VERSION_CODE) {
+                    hasUpdate = true;
+                    Log.i("SplashScreen", "New version available (" + versionCode + ")");
+                }
+            } catch (UnauthorizedUserException e) {
+                startActivity(new Intent(getApplicationContext(), WelcomeActivity.class));
+                finish();
+                e.printStackTrace(System.err);
+            }
+
+        };
+
         rCheckUser = () -> {
 
             //Manager databaseManager = new Manager(new MariaDB());
@@ -245,11 +254,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             intLibraryActivity.putExtra("hasUpdate", hasUpdate);
             intLibraryActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-            /**New Code**/
             Intent intHomePageActivity = new Intent(getApplicationContext(), HomePageActivity.class);
             intLibraryActivity.putExtra("hasUpdate", hasUpdate);
             intLibraryActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            /**New Code**/
 
             FirebaseUserService firebaseUserService = new FirebaseUserService();
 
@@ -280,10 +287,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                         Log.i("SplashScreen", "Library Activity is deprecated. Starting Home Page Activity.");
                         startActivity(intHomePageActivity);
-
-                        // Update last seen
-                        CurrentUser.user.setLastSeen(new DateTime());
-                        new MariaDB().updateUser(CurrentUser.user);
                     } else {
 
                         firebaseUserService.signOut();
@@ -305,6 +308,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();
             });
 
+        };
+
+        rCheckUser2 = () -> {
+
+            try {
+                hasSession = ELibUtilities.checkSession();
+            } catch (IOException | JSONException e) {
+                throw new RuntimeException(e);
+            }
         };
     }
 

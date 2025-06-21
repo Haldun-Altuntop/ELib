@@ -15,6 +15,7 @@ import arc.haldun.database.objects.DateTime;
 import arc.haldun.mylibrary.Tools;
 import arc.haldun.mylibrary.services.filetransfer.TransferService;
 
+@Deprecated
 public class BugReporter {
 
     private final Context context;

@@ -3,7 +3,10 @@ package arc.haldun.mylibrary.main;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,12 +28,17 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 import arc.haldun.database.database.Manager;
 import arc.haldun.database.database.MariaDB;
 import arc.haldun.database.objects.CurrentUser;
 import arc.haldun.database.objects.User;
 import arc.haldun.mylibrary.R;
 import arc.haldun.mylibrary.Tools;
+import arc.haldun.mylibrary.server.api.ELibUtilities;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
@@ -96,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 startButtonActionAnimation();
 
-                login(usernameOrEMail, password);
+                login2(usernameOrEMail, password);
 
             } else {
                 Toast.makeText(this, getString(R.string.email_or_password_cannot_be_empty), Toast.LENGTH_SHORT).show();
@@ -114,7 +122,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
+    private void login2(String username, String password) {
 
+        HandlerThread thread = new HandlerThread("server");
+        thread.start();
+
+        Handler handler = new Handler(thread.getLooper());
+
+        handler.post(() -> {
+
+            try {
+                ELibUtilities.login(username, password);
+            } catch (IOException | JSONException e) {
+                Log.e("LoginActivity", e.getMessage());
+                throw new RuntimeException(e);
+            }
+
+            runOnUiThread(() -> {
+
+                stopButtonActionAnimation();
+
+                startActivity(new Intent(getApplicationContext(), HomePageActivity.class));
+                finish();
+            });
+
+        });
+    }
 
     private void login(String username, String password) {
 
