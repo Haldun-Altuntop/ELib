@@ -1,5 +1,10 @@
 # E-Lib
 
+# 1.12.14
+* `UncaughtExceptionHandler:`
+  - Eğer hata mesajında `java.net.SocketTimeoutException` , `java.net.ConnectException` , `java.net.UnknownHostException` veya `java.net.SocketException` içeriyorsa hata kodu _Network_Error_ olarak gönderilir.
+
+
 # 1.12.13
 * `DeveloperUtilities` sınıfı oluşturuldu.
 * `DeveloperUtilities`: 

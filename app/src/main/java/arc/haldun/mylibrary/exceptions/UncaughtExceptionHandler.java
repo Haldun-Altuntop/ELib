@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -55,7 +54,7 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
             printWriter.close();
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            ex.printStackTrace(System.err);
         }
     }
 
@@ -69,7 +68,10 @@ public class UncaughtExceptionHandler implements Thread.UncaughtExceptionHandler
 
             writeExceptionToFile(e);
 
-            if (Objects.requireNonNull(e.getMessage()).contains("SocketTimeoutException")) {
+            if (Objects.requireNonNull(e.getMessage()).contains("java.net.SocketTimeoutException") ||
+                    Objects.requireNonNull(e.getMessage()).contains("java.net.ConnectException") ||
+                    Objects.requireNonNull(e.getMessage()).contains("java.net.UnknownHostException")||
+                    Objects.requireNonNull(e.getMessage()).contains("java.net.SocketException")) {
                 Tools.startErrorActivity(context, (Exception) e, ErrorActivity.NETWORK_ERROR);
             }
             else
