@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_home_page_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomePageActivity">
+
+    <include
+        layout="@layout/actionbar"
+        android:id="@+id/activity_home_page_actionbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_home_page_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_home_page_actionbar"
+        android:layout_above="@id/activity_home_page_bottom_bar"/>
+
+    <LinearLayout
+        android:id="@+id/activity_home_page_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/activity_home_page_toggle_calculate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textOn="Otomatik"
+            android:textOff="Manuel"
+            android:layout_gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hesaplanan enerji: "
+            android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/activity_home_page_tv_calculated_energy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kj"
+            android:layout_gravity="center"
+            android:paddingStart="3dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
