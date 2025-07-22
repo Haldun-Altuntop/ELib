@@ -2,7 +2,6 @@ package arc.haldun.hurda.mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -12,13 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.io.File;
-import java.io.IOException;
-
 import arc.haldun.hurda.api.ScrapBridge;
 import arc.haldun.hurda.api.SessionIdHolder;
-import arc.haldun.hurda.database.Connector;
-import arc.haldun.hurda.database.DatabaseConfig;
 
 @SuppressWarnings("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
@@ -97,7 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         if (hasSession) {
-            startActivity(new Intent(this, HomePageActivity.class));
+            startActivity(new Intent(this, CreateMixtureActivity.class));
         } else {
             SessionIdHolder.clearSessionId();
             startActivity(new Intent(this, WelcomeActivity.class));

@@ -1,12 +1,10 @@
 package arc.haldun.hurda.mobile;
 
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.os.Bundle;
 import android.os.Looper;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +29,9 @@ import arc.haldun.hurda.api.ScrapBridge;
 import arc.haldun.hurda.database.OperationFailedException;
 import arc.haldun.hurda.database.objects.Scrap;
 
-public class HomePageActivity extends AppCompatActivity {
+public class CreateMixtureActivity extends AppCompatActivity {
 
-    private static final Logger log = LoggerFactory.getLogger(HomePageActivity.class);
+    private static final Logger log = LoggerFactory.getLogger(CreateMixtureActivity.class);
     private Toolbar actionBar;
 
     private RecyclerView recyclerView;
@@ -45,7 +43,7 @@ public class HomePageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_home_page);
+        setContentView(R.layout.activity_create_mixture);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_home_page_root), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -111,7 +109,7 @@ public class HomePageActivity extends AppCompatActivity {
 
             try {
                 List<Scrap> scraps = Arrays.asList(ScrapBridge.getAllScraps());
-                scrapAdapter = new ScrapAdapter(HomePageActivity.this, scraps);
+                scrapAdapter = new ScrapAdapter(CreateMixtureActivity.this, scraps);
             } catch (OperationFailedException e) {
                 e.printStackTrace(System.err);
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

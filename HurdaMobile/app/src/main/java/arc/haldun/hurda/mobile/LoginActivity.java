@@ -3,10 +3,7 @@ package arc.haldun.hurda.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -20,7 +17,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import arc.haldun.hurda.api.ScrapBridge;
-import arc.haldun.hurda.database.DatabaseManager;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -73,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
             stopProgressAnimation();
 
             if (res) {
-                startActivity(new Intent(this, HomePageActivity.class));
+                startActivity(new Intent(this, CreateMixtureActivity.class));
                 finish();
             } else {
                 Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();

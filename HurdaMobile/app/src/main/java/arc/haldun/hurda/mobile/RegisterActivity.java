@@ -3,7 +3,6 @@ package arc.haldun.hurda.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
@@ -62,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (res) {
                 Toast.makeText(this, "Kayıt başarılı", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, HomePageActivity.class));
+                startActivity(new Intent(this, CreateMixtureActivity.class));
                 finish();
             } else {
                 Toast.makeText(this, "Kayıt başarısız", Toast.LENGTH_SHORT).show();

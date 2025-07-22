@@ -25,7 +25,7 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
-            android:name=".HomePageActivity"
+            android:name=".CreateMixtureActivity"
             android:exported="false" />
         <activity
             android:name=".SplashScreenActivity"
