@@ -1,13 +1,12 @@
 package arc.haldun.hurda.mobile;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import arc.haldun.hurda.database.objects.Scrap;
 
 public class ScrapHolderManager {
 
-    private static ArrayList<ScrapHolder> scrapHolders = new ArrayList<>();
+    private static final ArrayList<ScrapHolder> scrapHolders = new ArrayList<>();
 
     public static OnEnergyCalculatedListener onEnergyCalculatedListener;
 

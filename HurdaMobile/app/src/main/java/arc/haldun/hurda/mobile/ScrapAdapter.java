@@ -1,6 +1,5 @@
 package arc.haldun.hurda.mobile;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +16,7 @@ import arc.haldun.hurda.database.objects.Scrap;
 
 public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder> {
 
-    private final LayoutInflater layoutInflater;
-    private List<Scrap> scraps;
-
-    public ScrapAdapter(Context context, List<Scrap> scraps) {
-        layoutInflater = LayoutInflater.from(context);
-        this.scraps = scraps;
+    public ScrapAdapter(List<Scrap> scraps) {
 
         for (Scrap scrap : scraps) {
             ScrapHolder scrapHolder = new ScrapHolder();
@@ -34,7 +28,8 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
     @NonNull
     @Override
     public ScrapViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.item_scrap, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_scrap, parent, false);
         return new ScrapViewHolder(view);
     }
 
@@ -51,7 +46,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
         return ScrapHolderManager.getSize();
     }
 
-    static class ScrapViewHolder extends RecyclerView.ViewHolder {
+    public static class ScrapViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvScrapName;
         private SeekBar seekBar;
@@ -83,17 +78,17 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
 
                         setLastPercentage(progress);
 
-                        int fazlalık = ScrapHolderManager.totalPercentage - 100;
-                        if (fazlalık > 0) {
-                            seekBar.setProgress(progress - fazlalık);
-                            setLastPercentage(progress - fazlalık);
+                        int fazlalik = ScrapHolderManager.totalPercentage - 100;
+                        if (fazlalik > 0) {
+                            seekBar.setProgress(progress - fazlalik);
+                            setLastPercentage(progress - fazlalik);
 
-                            ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage(progress - fazlalık);
+                            ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage(progress - fazlalik);
                             ScrapHolderManager.calculateEnergy();
                         }
                     }
 
-                    tvPercentage.setText("%" + seekBar.getProgress());
+                    tvPercentage.setText(itemView.getContext().getString(R.string.percentage, seekBar.getProgress()));
                 }
 
                 @Override

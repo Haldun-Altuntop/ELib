@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
             stopProgressAnimation();
 
             if (res) {
-                startActivity(new Intent(this, CreateMixtureActivity.class));
+                startActivity(new Intent(this, HomePageActivity.class));
                 finish();
             } else {
                 Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();

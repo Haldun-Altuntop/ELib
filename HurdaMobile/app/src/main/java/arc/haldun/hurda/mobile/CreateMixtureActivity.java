@@ -31,7 +31,6 @@ import arc.haldun.hurda.database.objects.Scrap;
 
 public class CreateMixtureActivity extends AppCompatActivity {
 
-    private static final Logger log = LoggerFactory.getLogger(CreateMixtureActivity.class);
     private Toolbar actionBar;
 
     private RecyclerView recyclerView;
@@ -109,7 +108,7 @@ public class CreateMixtureActivity extends AppCompatActivity {
 
             try {
                 List<Scrap> scraps = Arrays.asList(ScrapBridge.getAllScraps());
-                scrapAdapter = new ScrapAdapter(CreateMixtureActivity.this, scraps);
+                scrapAdapter = new ScrapAdapter(scraps);
             } catch (OperationFailedException e) {
                 e.printStackTrace(System.err);
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();

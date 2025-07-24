@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (res) {
                 Toast.makeText(this, "Kayıt başarılı", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, CreateMixtureActivity.class));
+                startActivity(new Intent(this, HomePageActivity.class));
                 finish();
             } else {
                 Toast.makeText(this, "Kayıt başarısız", Toast.LENGTH_SHORT).show();

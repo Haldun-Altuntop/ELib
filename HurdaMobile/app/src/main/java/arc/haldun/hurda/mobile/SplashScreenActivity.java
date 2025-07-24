@@ -79,7 +79,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         SessionIdHolder.initFileForAndroid(getApplicationContext());
 
-        hasSession = ScrapBridge.hasSession();
+        hasSession = ScrapBridge.hasSession(); // fixme: internet olmadığında hata fırlatıyor
     }
 
     private void startApp() {
@@ -91,7 +91,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         if (hasSession) {
-            startActivity(new Intent(this, CreateMixtureActivity.class));
+            startActivity(new Intent(this, HomePageActivity.class));
         } else {
             SessionIdHolder.clearSessionId();
             startActivity(new Intent(this, WelcomeActivity.class));
