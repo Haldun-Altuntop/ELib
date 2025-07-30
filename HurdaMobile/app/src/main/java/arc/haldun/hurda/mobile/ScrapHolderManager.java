@@ -11,7 +11,7 @@ public class ScrapHolderManager {
 
     public static OnEnergyCalculatedListener onEnergyCalculatedListener;
 
-    public static int totalPercentage = 0;
+    public static double totalPercentage = 0;
 
     public static void addScrapHolder(ScrapHolder scrapHolder) {
         scrapHolders.add(scrapHolder);

@@ -5,7 +5,7 @@ import arc.haldun.hurda.database.objects.Scrap;
 public class ScrapHolder {
 
     private Scrap scrap;
-    private int percentage;
+    private double percentage;
 
     public Scrap getScrap() {
         return scrap;
@@ -15,11 +15,11 @@ public class ScrapHolder {
         this.scrap = scrap;
     }
 
-    public int getPercentage() {
+    public double getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(int percentage) {
+    public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
 }
