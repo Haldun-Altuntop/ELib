@@ -1,5 +1,7 @@
 package arc.haldun.hurda.mobile;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 import arc.haldun.hurda.database.objects.Mixture;
@@ -49,7 +51,9 @@ public class ScrapHolderManager {
         for (ScrapHolder scrapHolder : scrapHolders) {
             if (scrapHolder.getPercentage() == 0) continue;
             mixture.addScrap(scrapHolder.getScrap(), scrapHolder.getPercentage());
+            Log.e("percentage", scrapHolder.getPercentage() + "");
         }
+        Log.d("mixture", mixture.toString());
         return mixture;
     }
 

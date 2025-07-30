@@ -11,7 +11,7 @@
     <string name="login_failed">"Login failed"</string>
     <string name="ok">Tamam</string>
 
-    <string name="percentage">%% %.1f</string>
+    <string name="percentage">%.1f</string>
 
     <string name="add_new_parameter">Yeni parametre ekle</string>
     <string name="update_parameter">Parametre güncelle</string>

@@ -1,5 +1,7 @@
 package arc.haldun.hurda.mobile;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +53,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
 
         private TextView tvScrapName;
         private SeekBar seekBar;
-        private TextView tvPercentage;
+        private EditText tvPercentage;
 
         private AlertDialog dialog;
         private View scrapDetailsPane;
@@ -73,33 +75,13 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
 
                     if (fromUser) {
 
-                        if (ScrapHolderManager.totalPercentage >= 100) {
+                        setPercentage(progress);
 
-                            if (getLastPercentage() < (double) progress / 10) {
-                                seekBar.setProgress((int) lastPercentage * 10);
-                                return;
-                            }
-                        }
+                        double p = (double) seekBar.getProgress() / 10;
 
-                        ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage((double) progress / 10);
-                        ScrapHolderManager.calculateTotalPercentage();
-                        //ScrapHolderManager.calculateEnergy();
+                        tvPercentage.setText(itemView.getContext().getString(R.string.percentage, p));
 
-                        setLastPercentage(progress / 10);
-
-                        int fazlalik = (int) (ScrapHolderManager.totalPercentage * 10 - 1000);
-                        if (fazlalik > 0) {
-                            seekBar.setProgress(progress - fazlalik);
-                            setLastPercentage(progress - fazlalik);
-
-                            ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage((double) (progress - fazlalik) / 10);
-                            //ScrapHolderManager.calculateEnergy();
-                        }
                     }
-
-                    double p = (double) seekBar.getProgress() / 10;
-
-                    tvPercentage.setText(itemView.getContext().getString(R.string.percentage, p));
                 }
 
                 @Override
@@ -113,6 +95,56 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
                 }
             });
             itemView.setOnClickListener(this::onClick);
+
+            tvPercentage.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.toString().isEmpty()) return;
+                    String str = s.toString().replace(",", ".");
+                    float input = Float.parseFloat(str);
+
+                    int progress = (int) (input * 10);
+
+                    setPercentage(progress);
+
+                    seekBar.setProgress(progress);
+                }
+            });
+        }
+
+        private void setPercentage(int progress) {
+            if (ScrapHolderManager.totalPercentage >= 100) {
+
+                if (getLastPercentage() < (double) progress / 10) {
+                    seekBar.setProgress((int) lastPercentage * 10);
+                    return;
+                }
+            }
+
+            ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage((double) progress / 10);
+            ScrapHolderManager.calculateTotalPercentage();
+            //ScrapHolderManager.calculateEnergy();
+
+            setLastPercentage(progress / 10);
+
+            int fazlalik = (int) (ScrapHolderManager.totalPercentage * 10 - 1000);
+            if (fazlalik > 0) {
+                seekBar.setProgress(progress - fazlalik);
+                setLastPercentage(progress - fazlalik);
+
+                ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage((double) (progress - fazlalik) / 10);
+                //ScrapHolderManager.calculateEnergy();
+            }
         }
 
         private void onClick(View v) {
@@ -166,7 +198,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
             tvScrapName = v.findViewById(R.id.item_scrap_tv_scrap_name);
             seekBar = v.findViewById(R.id.item_scrap_seek_bar);
             tvPercentage = v.findViewById(R.id.item_scrap_tv_percentage);
-            tvPercentage.setText("%0");
+            tvPercentage.setText("0");
 
             scrapDetailsPane = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_scrap_details, null);
             etScrapName = scrapDetailsPane.findViewById(R.id.dialog_scrap_details_et_scrap_name);
