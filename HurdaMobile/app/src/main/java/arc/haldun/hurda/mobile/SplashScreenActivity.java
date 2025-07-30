@@ -2,6 +2,7 @@ package arc.haldun.hurda.mobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -11,14 +12,20 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.net.UnknownHostException;
+import java.util.Objects;
+
 import arc.haldun.hurda.api.ScrapBridge;
 import arc.haldun.hurda.api.SessionIdHolder;
+import arc.haldun.hurda.mobile.noconnection.NoConnectionActivity;
 
 @SuppressWarnings("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private TextView tvProgress;
+
+    private Thread thread;
 
     private boolean hasSession;
 
@@ -40,12 +47,14 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void startProgress() {
-        new Thread(() -> {
+        thread = new Thread(() -> {
             loadPreferences();
             checkUpdates();
             checkSession();
             startApp();
-        }).start();
+        });
+
+        thread.start();
     }
 
     private void loadPreferences() {
@@ -79,7 +88,26 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         SessionIdHolder.initFileForAndroid(getApplicationContext());
 
-        hasSession = ScrapBridge.hasSession(); // fixme: internet olmadığında hata fırlatıyor
+        try {
+            hasSession = ScrapBridge.hasSession(); // fixme: internet olmadığında hata fırlatıyor
+        } catch (RuntimeException e) {
+            if (Objects.requireNonNull(e.getMessage()).contains("UnknownHost")) {
+                startActivity(new Intent(
+                        SplashScreenActivity.this,
+                        NoConnectionActivity.class
+                ));
+                finish();
+                try {
+
+                    synchronized (thread) {
+                        thread.wait();
+                    }
+                } catch (InterruptedException ex) {
+                    throw new RuntimeException(ex);
+                }
+                thread.interrupt();
+            }
+        }
     }
 
     private void startApp() {

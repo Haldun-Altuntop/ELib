@@ -2,6 +2,7 @@ package arc.haldun.hurda.mobile;
 
 import java.util.ArrayList;
 
+import arc.haldun.hurda.database.objects.Mixture;
 import arc.haldun.hurda.database.objects.Scrap;
 
 public class ScrapHolderManager {
@@ -43,6 +44,15 @@ public class ScrapHolderManager {
         }
     }
 
+    public static Mixture getMixture() {
+        Mixture mixture = new Mixture();
+        for (ScrapHolder scrapHolder : scrapHolders) {
+            if (scrapHolder.getPercentage() == 0) continue;
+            mixture.addScrap(scrapHolder.getScrap(), scrapHolder.getPercentage());
+        }
+        return mixture;
+    }
+
     private static double calculateScrapEnergy(Scrap scrap) {
 
         double energy =
@@ -59,7 +69,7 @@ public class ScrapHolderManager {
         return energy;
     }
 
-    private static void calculateTotalPercentage() {
+    public static void calculateTotalPercentage() {
         totalPercentage = 0;
         for (ScrapHolder scrapHolder : scrapHolders) {
             totalPercentage += scrapHolder.getPercentage();

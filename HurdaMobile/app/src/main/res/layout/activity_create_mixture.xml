@@ -53,6 +53,13 @@
             android:layout_gravity="center"
             android:paddingStart="3dp"/>
 
+        <Button
+            android:id="@+id/activity_create_mixture_btn_calculate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hesapla"
+            android:textAllCaps="false" />
+
     </LinearLayout>
 
 </RelativeLayout>

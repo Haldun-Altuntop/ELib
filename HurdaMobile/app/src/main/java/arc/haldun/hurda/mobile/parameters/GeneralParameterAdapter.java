@@ -1,11 +1,14 @@
 package arc.haldun.hurda.mobile.parameters;
 
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexboxLayoutManager;
@@ -36,28 +39,38 @@ public class GeneralParameterAdapter extends RecyclerView.Adapter<GeneralParamet
                 (Utilities.SCREEN_WIDTH - 30) / 3,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        params.setMargins(5,5,5,5);
-        view.setLayoutParams(params);
+        //params.setMargins(5,5,5,5);
+        //view.setLayoutParams(params);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.setData(generalParameters.get(
-                position).getName(),
-                generalParameters.get(position).getValue()
+        GeneralParameter currentParameter = generalParameters.get(position);
+
+        boolean u_cons = currentParameter.getName().contains("U. Cons.");
+
+        if (u_cons) {
+            holder.setBackgroundColor(0xFF3F51B5);
+        } else {
+            holder.setBackgroundColor(0xFF6A6A6A);
+        }
+
+        holder.setData(
+                currentParameter.getName(),
+                currentParameter.getValue()
         );
 
         holder.itemView.setOnClickListener(v -> {
             if (onItemClicked != null) {
-                onItemClicked.onItemClicked(generalParameters.get(position));
+                onItemClicked.onItemClicked(currentParameter);
             }
         });
 
         holder.itemView.setOnLongClickListener(v -> {
             if (onItemClicked != null) {
-                onItemLongClicked.onItemLongClicked(generalParameters.get(position));
+                onItemLongClicked.onItemLongClicked(currentParameter);
             }
             return false;
         });
@@ -106,17 +119,24 @@ public class GeneralParameterAdapter extends RecyclerView.Adapter<GeneralParamet
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView tvParameterName, tvParameterValue;
+        private final CardView root;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvParameterName = itemView.findViewById(R.id.item_general_parameter_tv_parameter_name);
             tvParameterValue = itemView.findViewById(R.id.item_general_parameter_tv_parameter_value);
+            root = itemView.findViewById(R.id.item_general_parameter_root);
         }
 
         public void setData(String parameterName, double parameterValue) {
             this.tvParameterName.setText(parameterName);
             this.tvParameterValue.setText(String.valueOf(parameterValue));
+        }
+
+        public void setBackgroundColor(int color) {
+            root.setCardBackgroundColor(color);
+            //root.setBackgroundColor(color);
         }
     }
 }

@@ -2,6 +2,8 @@ package arc.haldun.hurda.mobile.parameters;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -96,7 +98,7 @@ public class SetParametersActivity extends AppCompatActivity {
 
 
             } catch (OperationFailedException e) {
-                throw new RuntimeException(e);
+                runOnUiThread(() -> Utilities.unauthorizedUserDetected(this));
             }
         }).start();
     }
@@ -112,12 +114,12 @@ public class SetParametersActivity extends AppCompatActivity {
     private void onItemLongClicked(GeneralParameter parameter) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(parameter.getName())
-                .setMessage("Parametreyi silmek istediğinize emin misiniz?")
-                .setPositiveButton("Evet", (dialog, which) -> {
-                    Utilities.showLoadingDialog(this, "Parametre siliniyor");
+                .setMessage(getString(R.string.parameter_will_deleted))
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    Utilities.showLoadingDialog(this, getString(R.string.parameter_is_deleting));
                     deleteParameter(parameter);
                 })
-                .setNegativeButton("Hayır", null);
+                .setNegativeButton(getString(R.string.no), null);
 
         builder.create().show();
     }
@@ -148,7 +150,7 @@ public class SetParametersActivity extends AppCompatActivity {
             } catch (OperationFailedException e) {
                 if (Objects.requireNonNull(e.getMessage()).contains("Yetkisiz kullanıcı")) {
                     runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Yetkisiz kullanıcı! Yeniden giriş yapın", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.unauthorized_user_message, Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         finish();
                     });
@@ -179,7 +181,7 @@ public class SetParametersActivity extends AppCompatActivity {
             } catch (OperationFailedException e) {
                 if (Objects.requireNonNull(e.getMessage()).contains("Yetkisiz kullanıcı")) {
                     runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Yetkisiz kullanıcı! Yeniden giriş yapın", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.unauthorized_user_message, Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         finish();
                     });
@@ -205,7 +207,7 @@ public class SetParametersActivity extends AppCompatActivity {
             } catch (OperationFailedException e) {
                 if (Objects.requireNonNull(e.getMessage()).contains("Yetkisiz kullanıcı")) {
                     runOnUiThread(() -> {
-                        Toast.makeText(getApplicationContext(), "Yetkisiz kullanıcı! Yeniden giriş yapın", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.unauthorized_user_message, Toast.LENGTH_LONG).show();
                         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         finish();
                     });
@@ -246,24 +248,24 @@ public class SetParametersActivity extends AppCompatActivity {
 
     private void initDialog() {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setTitle("Yeni Parametre Ekle")
+        builder1.setTitle(getString(R.string.add_new_parameter))
                 .setView(addParameterDialogPane)
-                .setPositiveButton("Ekle", (dialog, which) -> {
-                    Utilities.showLoadingDialog(this, "Parametre ekleniyor");
+                .setPositiveButton(getString(R.string.add), (dialog, which) -> {
+                    Utilities.showLoadingDialog(this, getString(R.string.parameter_is_adding));
                     addParameter();
                 })
-                .setNegativeButton("İptal", null);
+                .setNegativeButton(getString(R.string.cancel), null);
 
         addParameterDialog = builder1.create();
 
         AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
-        builder2.setTitle("Parametre Güncelle")
+        builder2.setTitle(getString(R.string.update_parameter))
                 .setView(updateParameterPane)
-                .setPositiveButton("Güncelle", (dialog, which) -> {
-                    Utilities.showLoadingDialog(this, "Parametre güncelleniyor");
+                .setPositiveButton(getString(R.string.update_parameter), (dialog, which) -> {
+                    Utilities.showLoadingDialog(this, getString(R.string.parameter_is_updating));
                     updateParameter();
                 })
-                .setNegativeButton("İptal", null);
+                .setNegativeButton(getString(R.string.cancel), null);
 
         updateParameterDialog = builder2.create();
     }
