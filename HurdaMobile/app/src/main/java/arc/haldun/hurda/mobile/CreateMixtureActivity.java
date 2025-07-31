@@ -3,6 +3,7 @@ package arc.haldun.hurda.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
@@ -104,12 +107,10 @@ public class CreateMixtureActivity extends AppCompatActivity {
                 GeneralParameter injectionCoke_uCons = ScrapBridge.getGeneralParameter("Injection Coke [kg] - U. Cons. ");
                 GeneralParameter FeOSlag = ScrapBridge.getGeneralParameter("FeO Slag [%]");
 
-                double[] dH = {0};
-                double[] slag = {0};
-                double[] yield = {0};
+
 
                 mixture.getScrapDoubleMap().forEach((scrap, percentage) -> {
-                    slag[0] += ((
+                    double slag = ((
                             (scrap.getP15_SiO2() + scrap.getP14_Al2O3() + scrap.getP13_MgO() + scrap.getP12_CaO() + scrap.getP05_Si() * 2.139) * 10 +
                                     (limeAddition_uCons.getValue() * limeCaO.getValue() + dololimeAddition_uCons.getValue() * doloCaO.getValue()) / 100 +
                                     (limeAddition_uCons.getValue() * limeMgO.getValue() + dololimeAddition_uCons.getValue() * doloMgO.getValue()) / 100 +
@@ -119,32 +120,67 @@ public class CreateMixtureActivity extends AppCompatActivity {
                                     (chargeCoke_uCons.getValue() * chargeAl2O3.getValue() + injectionCoke_uCons.getValue() * injectionAl2O3.getValue()) / 100 +
                                     (chargeCoke_uCons.getValue() * chargeSiO2.getValue() + injectionCoke_uCons.getValue() * injectionSiO2.getValue()) / 100 +
                                     (chargeCoke_uCons.getValue() * chargeCaO.getValue() + injectionCoke_uCons.getValue() * injectionCaO.getValue()) / 100
-                    ) / (1 - FeOSlag.getValue() / 100)) * percentage;
+                    ) / (1 - FeOSlag.getValue() / 100));
+
+                    scrap.setP21_slag(slag);
                 });
-                slag[0] /= 100;
+                //slag[0] /= 100;
 
                 mixture.getScrapDoubleMap().forEach((scrap, percentage) -> {
 
-                    yield[0] += (scrap.getP09_Fe() - slag[0] * FeOSlag.getValue() * 56/72/1000 + 0) * percentage; // fixme: sondaki 0 değeri excel tablosunda $D$69 ile ifade edilmiş
+                    double yield = (scrap.getP09_Fe() - scrap.getP21_slag() * FeOSlag.getValue() * 56/72/1000 + 0); // fixme: sondaki 0 değeri excel tablosunda $D$69 ile ifade edilmiş
+
+                    scrap.setP22_yield(yield);
 
                 });
-                yield[0] /= 100;
+                //yield[0] /= 100;
 
                 mixture.getScrapDoubleMap().forEach((scrap, percentage) -> {
 
-                    dH[0] += (scrap.getP09_Fe() * 3.57 +
+                    double dH = (scrap.getP09_Fe() * 3.57 +
                             scrap.getP15_SiO2() * 4.83 +
                             scrap.getP12_CaO() * 3.75 +
                             (scrap.getP10_O() * 56/16) * 4.44 +
                             (tapTemp.getValue() - 1527) * 0.3 +
                             (scrap.getP10_O() * 56/16) * 58/1000 +
-                            (scrap.getP24_meltingFactor() * percentage)) * percentage;
-                });
-                dH[0] = dH[0] / 100 + slag[0] * 0.46;
+                            (scrap.getP24_meltingFactor() * percentage));
 
-                dH[0] = Math.round(dH[0] * 100) / 100.0;
-                slag[0] = Math.round(slag[0] * 100) / 100.0;
-                yield[0] = Math.round(yield[0] * 100) / 100.0;
+                    scrap.setP23_dH(dH);
+
+                    if (scrap.getP01_name().equals("Slag Recovery")) {
+
+                        if (percentage > 0) {
+                            double dH_slagRecovery = 384 + scrap.getP21_slag() * 0.656 + (scrap.getP10_O() - 25 * 0 / 1000) * 13.6;
+                            scrap.setP23_dH(dH_slagRecovery);
+                        } else scrap.setP23_dH(0);
+                    }
+
+                });
+                //dH[0] = (dH[0] / 100) + (slag[0] * 0.46);
+
+                // Create new scrap
+
+                double[] dH = {0};
+                double[] slag = {0};
+                double[] yield = {0};
+
+                mixture.getScrapDoubleMap().forEach((scrap, percentage) -> {
+
+                    slag[0] += scrap.getP21_slag() * percentage;
+                    yield[0] += scrap.getP22_yield() * percentage;
+                    dH[0] += scrap.getP23_dH() * percentage;
+
+                });
+
+                // Son rötuşları yap
+                slag[0] /= 100;
+                yield[0] /= 100;
+                dH[0] = (dH[0] / 100) + (slag[0] * 0.46);
+
+                // Küsüratları indirge
+                dH[0] = Math.round(dH[0] * 10) / 10.0;
+                slag[0] = Math.round(slag[0] * 10) / 10.0;
+                yield[0] = Math.round(yield[0] * 10) / 10.0;
 
                 Calculation calculation = new Calculation(dH[0], yield[0], slag[0]);
 
