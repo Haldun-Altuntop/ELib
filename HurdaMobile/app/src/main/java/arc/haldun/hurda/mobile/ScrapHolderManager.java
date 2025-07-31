@@ -19,6 +19,17 @@ public class ScrapHolderManager {
         scrapHolders.add(scrapHolder);
     }
 
+    /**
+     * ScrapHolders listesini temizler.
+     * OnEnergyCalculatedListener'ı null eder.
+     * Toplam oranı sıfırlar.
+     */
+    public static void clear() {
+        scrapHolders.clear();
+        onEnergyCalculatedListener = null;
+        totalPercentage = 0;
+    }
+
     public static void removeScrapHolder(ScrapHolder scrapHolder) {
         scrapHolders.remove(scrapHolder);
     }

@@ -19,6 +19,8 @@ import arc.haldun.hurda.database.objects.Scrap;
 
 public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHolder> {
 
+    private View.OnFocusChangeListener onFocusChangeListener;
+
     public ScrapAdapter(List<Scrap> scraps) {
 
         for (Scrap scrap : scraps) {
@@ -40,6 +42,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
     public void onBindViewHolder(@NonNull ScrapViewHolder holder, int position) {
         if (position >= 0 && position < ScrapHolderManager.getSize()) {
             holder.setData(ScrapHolderManager.getScrapHolder(position).getScrap());
+            holder.tvPercentage.setOnFocusChangeListener(this.onFocusChangeListener);
         }
         ScrapHolderManager.getScrapHolder(position).setPercentage(holder.getPercentage());
     }
@@ -47,6 +50,10 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
     @Override
     public int getItemCount() {
         return ScrapHolderManager.getSize();
+    }
+
+    public void setOnItemFocusChangeListener(View.OnFocusChangeListener onFocusChangeListener) {
+        this.onFocusChangeListener = onFocusChangeListener;
     }
 
     public static class ScrapViewHolder extends RecyclerView.ViewHolder {
@@ -126,7 +133,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
             if (ScrapHolderManager.totalPercentage >= 100) {
 
                 if (getLastPercentage() < (double) progress / 10) {
-                    seekBar.setProgress((int) lastPercentage * 10);
+                    seekBar.setProgress((int) lastPercentage * 10, true);
                     return;
                 }
             }

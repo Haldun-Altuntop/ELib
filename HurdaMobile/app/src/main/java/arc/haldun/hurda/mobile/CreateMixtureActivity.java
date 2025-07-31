@@ -3,7 +3,6 @@ package arc.haldun.hurda.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +58,13 @@ public class CreateMixtureActivity extends AppCompatActivity {
 
         ScrapHolderManager.onEnergyCalculatedListener = energy -> tvCalculatedEnergy.setText(String.valueOf(energy));
         btnCalculate.setOnClickListener(this::btnCalculateClick);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        ScrapHolderManager.clear();
     }
 
     private void btnCalculateClick(View v) {
@@ -144,6 +150,9 @@ public class CreateMixtureActivity extends AppCompatActivity {
 
                 runOnUiThread(Utilities::hideLoadingDialog);
 
+                String msgTv = "Entalpi: " + calculation.getdH() + "\nYield: " + calculation.getYield() + "\nSlag: " + calculation.getSlag();
+                runOnUiThread(() -> tvCalculatedEnergy.setText(msgTv));
+
                 String msg = "Entalpi: " + calculation.getdH() + " Yield: " + calculation.getYield() + " Slag: " + calculation.getSlag();
                 runOnUiThread(() -> Toast.makeText(this, msg, Toast.LENGTH_LONG).show());
             } catch (OperationFailedException e) {
@@ -200,6 +209,8 @@ public class CreateMixtureActivity extends AppCompatActivity {
         new Thread(() -> {
             Looper.prepare();
 
+            runOnUiThread(() -> Utilities.showLoadingDialog(CreateMixtureActivity.this, "Hurdalar yükleniyor..."));
+
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -215,6 +226,7 @@ public class CreateMixtureActivity extends AppCompatActivity {
             }
 
             runOnUiThread(this::initRecyclerView);
+            runOnUiThread(Utilities::hideLoadingDialog);
         }).start();
 
         tvCalculatedEnergy = findViewById(R.id.activity_home_page_tv_calculated_energy);
