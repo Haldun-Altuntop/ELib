@@ -35,6 +35,7 @@ public class ScrapHolderManager {
     }
 
     public static ScrapHolder getScrapHolder(int position) {
+        if (position >= scrapHolders.size()) return new ScrapHolder();
         return scrapHolders.get(position);
     }
 

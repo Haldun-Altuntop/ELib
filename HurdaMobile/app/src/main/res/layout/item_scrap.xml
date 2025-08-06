@@ -11,7 +11,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/item_scrap_root">
 
         <TextView
             android:id="@+id/item_scrap_tv_scrap_name"
@@ -22,12 +23,6 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp" />
 
-        <SeekBar
-            android:id="@+id/item_scrap_seek_bar"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -37,7 +32,7 @@
 
         <EditText
             android:id="@+id/item_scrap_tv_percentage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="percentage"
             android:textColor="@color/white"
