@@ -3,7 +3,6 @@ package arc.haldun.hurda.mobile;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,8 +21,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +38,7 @@ public class CreateMixtureActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ScrapAdapter scrapAdapter;
 
-    private TextView tvCalculatedEnergy;
+    private TextView tvCalculatedEnergy, tvUsedAndRemainingPercentage;
 
     private Button btnCalculate;
 
@@ -61,6 +58,17 @@ public class CreateMixtureActivity extends AppCompatActivity {
 
         ScrapHolderManager.onEnergyCalculatedListener = energy -> tvCalculatedEnergy.setText(String.valueOf(energy));
         btnCalculate.setOnClickListener(this::btnCalculateClick);
+
+        ScrapHolderManager.onScrapPercentageChangeListener = this::onPercentageChanged;
+    }
+
+    private void onPercentageChanged(double percentage) {
+        ScrapHolderManager.calculateTotalPercentage();
+        percentage = ScrapHolderManager.totalPercentage;
+        double remainingPercentage = 100 - percentage;
+        tvUsedAndRemainingPercentage.setText(
+                "Kullanılan oran: " + percentage + "%\nKalan oran: " + remainingPercentage + "%"
+        );
     }
 
     @Override
@@ -240,6 +248,7 @@ public class CreateMixtureActivity extends AppCompatActivity {
     private void initViews () {
         actionBar = findViewById(R.id.activity_home_page_actionbar);
         btnCalculate = findViewById(R.id.activity_create_mixture_btn_calculate);
+        tvUsedAndRemainingPercentage = findViewById(R.id.activity_create_mixture_tv_used_and_remaining_percentage);
 
         recyclerView = findViewById(R.id.activity_home_page_recycler_view);
         new Thread(() -> {

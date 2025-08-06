@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -53,7 +54,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
 
     @Override
     public int getItemCount() {
-        return ScrapHolderManager.getSize() + 3;
+        return ScrapHolderManager.getSize() + 3; // Klavye açıldığında itemlerin üstüne gelmemesi için ekstradan boş 3 tane item eklenir.
     }
 
     public void setOnItemFocusChangeListener(View.OnFocusChangeListener onFocusChangeListener) {
@@ -66,7 +67,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
         private TextView tvScrapName;
         private EditText tvPercentage;
 
-        private double percentage;
+        private double percentage, lastPercentage;
 
         private AlertDialog dialog;
         private View scrapDetailsPane;
@@ -99,6 +100,18 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
 
                     percentage = Double.parseDouble(str);
                     ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage(percentage);
+
+                    ScrapHolderManager.calculateTotalPercentage();
+                    double totalPercentage = ScrapHolderManager.totalPercentage;
+
+                    if (totalPercentage > 100) {
+                        percentage = lastPercentage;
+                        ScrapHolderManager.getScrapHolder(getAdapterPosition()).setPercentage(percentage);
+                        tvPercentage.setText(String.valueOf(percentage));
+                        Toast.makeText(itemView.getContext(), "Toplam oran %100'den fazla olamaz", Toast.LENGTH_SHORT).show();
+                    }
+
+                    lastPercentage = percentage;
                 }
             });
         }

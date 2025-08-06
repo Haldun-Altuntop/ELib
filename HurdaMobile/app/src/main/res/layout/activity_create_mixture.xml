@@ -15,21 +15,14 @@
         android:id="@+id/activity_home_page_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_home_page_actionbar"
-        android:layout_above="@id/activity_home_page_bottom_bar"/>
+        android:layout_below="@id/activity_home_page_bottom_bar" />
 
     <LinearLayout
         android:id="@+id/activity_home_page_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/activity_home_page_actionbar"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hesaplanan "
-            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/activity_home_page_tv_calculated_energy"
@@ -37,7 +30,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="0" />
+            android:text="Entalpi: 0\nYield: 0\nSlag: 0" />
+
+        <TextView
+            android:id="@+id/activity_create_mixture_tv_used_and_remaining_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="kullanılan ve\n kalan yüzde"
+            android:layout_gravity="center" />
 
         <Button
             android:id="@+id/activity_create_mixture_btn_calculate"

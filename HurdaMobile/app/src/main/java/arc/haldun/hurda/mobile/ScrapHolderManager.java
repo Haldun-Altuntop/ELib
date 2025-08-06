@@ -12,10 +12,12 @@ public class ScrapHolderManager {
     private static final ArrayList<ScrapHolder> scrapHolders = new ArrayList<>();
 
     public static OnEnergyCalculatedListener onEnergyCalculatedListener;
+    public static OnPercentageChangeListener onScrapPercentageChangeListener;
 
     public static double totalPercentage = 0;
 
     public static void addScrapHolder(ScrapHolder scrapHolder) {
+        scrapHolder.setOnPercentageChangeListener(onScrapPercentageChangeListener);
         scrapHolders.add(scrapHolder);
     }
 
