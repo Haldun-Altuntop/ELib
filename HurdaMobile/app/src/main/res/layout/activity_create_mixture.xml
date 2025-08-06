@@ -25,14 +25,6 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <ToggleButton
-            android:id="@+id/activity_home_page_toggle_calculate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textOn="Otomatik"
-            android:textOff="Manuel"
-            android:layout_gravity="center" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
