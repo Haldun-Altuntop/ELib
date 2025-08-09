@@ -5,6 +5,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -66,6 +67,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
         private View root;
         private TextView tvScrapName;
         private EditText tvPercentage;
+        private Button btnParameters;
 
         private double percentage, lastPercentage;
 
@@ -79,7 +81,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
             super(itemView);
             init(itemView);
 
-            itemView.setOnClickListener(this::onClick);
+            btnParameters.setOnClickListener(this::onClick);
 
             tvPercentage.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -165,6 +167,7 @@ public class ScrapAdapter extends RecyclerView.Adapter<ScrapAdapter.ScrapViewHol
             tvScrapName = v.findViewById(R.id.item_scrap_tv_scrap_name);
             tvPercentage = v.findViewById(R.id.item_scrap_tv_percentage);
             tvPercentage.setText("0");
+            btnParameters = v.findViewById(R.id.item_scrap_btn_parameters);
 
             scrapDetailsPane = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_scrap_details, null);
             etScrapName = scrapDetailsPane.findViewById(R.id.dialog_scrap_details_et_scrap_name);

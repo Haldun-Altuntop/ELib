@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:textSize="20sp"
             android:text="Entalpi: 0\nYield: 0\nSlag: 0" />
 
         <TextView
@@ -37,14 +38,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textSize="20sp"
             android:text="kullanılan ve\n kalan yüzde"
             android:layout_gravity="center" />
 
         <Button
             android:id="@+id/activity_create_mixture_btn_calculate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Hesapla"
+            android:textSize="20sp"
+            android:layout_gravity="center"
             android:textAllCaps="false"
             android:layout_weight="1"/>
 
