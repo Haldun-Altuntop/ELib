@@ -1,5 +1,6 @@
 package arc.haldun.hurda.mobile.parameters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,10 @@ public class GeneralParameterAdapter extends RecyclerView.Adapter<GeneralParamet
         this.generalParameters = new ArrayList<>(List.of(generalParameters));
     }
 
+    public GeneralParameterAdapter(List<GeneralParameter> generalParameters) {
+        this.generalParameters = generalParameters;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -50,9 +55,9 @@ public class GeneralParameterAdapter extends RecyclerView.Adapter<GeneralParamet
         boolean u_cons = currentParameter.getName().contains("U. Cons.");
 
         if (u_cons) {
-            holder.setBackgroundColor(0xFF3F51B5);
+            holder.setBackgroundColor(holder.getContext().getColor(R.color.parameter_u_cons));
         } else {
-            holder.setBackgroundColor(0xFF6A6A6A);
+            holder.setBackgroundColor(holder.getContext().getColor(R.color.parameter));
         }
 
         holder.setData(
@@ -135,6 +140,10 @@ public class GeneralParameterAdapter extends RecyclerView.Adapter<GeneralParamet
         public void setBackgroundColor(int color) {
             root.setCardBackgroundColor(color);
             //root.setBackgroundColor(color);
+        }
+
+        public Context getContext() {
+            return root.getContext();
         }
     }
 }

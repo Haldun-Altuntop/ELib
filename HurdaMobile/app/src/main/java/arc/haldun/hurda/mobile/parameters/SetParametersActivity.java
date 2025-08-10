@@ -2,12 +2,14 @@ package arc.haldun.hurda.mobile.parameters;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,15 +20,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexWrap;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import arc.haldun.hurda.api.ScrapBridge;
@@ -38,8 +37,9 @@ import arc.haldun.hurda.mobile.Utilities;
 
 public class SetParametersActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private GeneralParameterAdapter parameterAdapter;
+    private RecyclerView rvGeneralParameters, rvTimeBalance, rvFluxesAndOtherAdditions, rvMeltInTraceElements;
+    private GeneralParameterAdapter parameterAdapter, timeBalanceAdapter, fluxesAndOtherAdditionsAdapter, meltInTraceElementsAdapter;
+
     private FloatingActionButton fab;
     private Toolbar actionBar;
     private AlertDialog addParameterDialog, updateParameterDialog;
@@ -47,6 +47,7 @@ public class SetParametersActivity extends AppCompatActivity {
 
     private View addParameterDialogPane;
     private EditText etParameterName_add, etParameterValue_add;
+    private Spinner spinnerCategory;
 
     private View updateParameterPane;
     private EditText etParameterName_update, etParameterValue_update;
@@ -75,23 +76,86 @@ public class SetParametersActivity extends AppCompatActivity {
             try {
                 GeneralParameter[] parameters = ScrapBridge.getAllGeneralParameters();
 
+                ArrayList<GeneralParameter> generalParameters = new ArrayList<>();
+                ArrayList<GeneralParameter> timeBalance = new ArrayList<>();
+                ArrayList<GeneralParameter> fluxesAndOtherAdditions = new ArrayList<>();
+                ArrayList<GeneralParameter> meltInTraceElements = new ArrayList<>();
+
+                for (GeneralParameter parameter : parameters) {
+
+                    switch (parameter.getCategory()) {
+                        case GENERAL:
+                            generalParameters.add(parameter);
+                            break;
+                        case TIME_BALANCE:
+                            timeBalance.add(parameter);
+                            break;
+                        case FLUXES_AND_OTHER_ADDITIONS:
+                            fluxesAndOtherAdditions.add(parameter);
+                            break;
+                        case MELT_IN_TRACE_ELEMENTS:
+                            meltInTraceElements.add(parameter);
+                            break;
+                    }
+                }
+
                 runOnUiThread(() -> {
 
-                    parameterAdapter = new GeneralParameterAdapter(parameters);
+                    // Adapters
+                    parameterAdapter = new GeneralParameterAdapter(generalParameters);
                     parameterAdapter.setOnItemClicked(this::onItemClicked);
                     parameterAdapter.setOnItemLongClicked(this::onItemLongClicked);
 
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    timeBalanceAdapter = new GeneralParameterAdapter(timeBalance);
+                    timeBalanceAdapter.setOnItemClicked(this::onItemClicked);
+                    timeBalanceAdapter.setOnItemLongClicked(this::onItemLongClicked);
 
-                    FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getApplicationContext());
-                    flexboxLayoutManager.setFlexDirection(FlexDirection.ROW); // Yatayda diz
-                    flexboxLayoutManager.setFlexWrap(FlexWrap.WRAP);          // Taşarsa alt satıra geç
-                    flexboxLayoutManager.setJustifyContent(JustifyContent.FLEX_START); // Sola hizalı
+                    fluxesAndOtherAdditionsAdapter = new GeneralParameterAdapter(fluxesAndOtherAdditions);
+                    fluxesAndOtherAdditionsAdapter.setOnItemClicked(this::onItemClicked);
+                    fluxesAndOtherAdditionsAdapter.setOnItemLongClicked(this::onItemLongClicked);
 
+                    meltInTraceElementsAdapter = new GeneralParameterAdapter(meltInTraceElements);
+                    meltInTraceElementsAdapter.setOnItemClicked(this::onItemClicked);
+                    meltInTraceElementsAdapter.setOnItemLongClicked(this::onItemLongClicked);
 
-                    recyclerView.setLayoutManager(flexboxLayoutManager);
-                    recyclerView.setAdapter(parameterAdapter);
+                    // Layout Managers
+                    GridLayoutManager lmGeneralParameters = new GridLayoutManager(getApplicationContext(), 2) {
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+                    };
+                    GridLayoutManager lmTimeBalance = new GridLayoutManager(getApplicationContext(), 2) {
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+                    };
+                    GridLayoutManager lmMeltInTraceElements = new GridLayoutManager(getApplicationContext(), 2) {
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+                    };
+                    GridLayoutManager lmFluxesAdOtherAdditions = new GridLayoutManager(getApplicationContext(), 2) {
+                        @Override
+                        public boolean canScrollVertically() {
+                            return false;
+                        }
+                    };
+
+                    // RecyclerViews
+                    rvGeneralParameters.setLayoutManager(lmGeneralParameters);
+                    rvGeneralParameters.setAdapter(parameterAdapter);
+
+                    rvTimeBalance.setLayoutManager(lmTimeBalance);
+                    rvTimeBalance.setAdapter(timeBalanceAdapter);
+
+                    rvFluxesAndOtherAdditions.setLayoutManager(lmMeltInTraceElements);
+                    rvFluxesAndOtherAdditions.setAdapter(fluxesAndOtherAdditionsAdapter);
+
+                    rvMeltInTraceElements.setLayoutManager(lmFluxesAdOtherAdditions);
+                    rvMeltInTraceElements.setAdapter(meltInTraceElementsAdapter);
 
                     progressBar.setVisibility(View.GONE);
                 });
@@ -132,8 +196,10 @@ public class SetParametersActivity extends AppCompatActivity {
     private void addParameter() {
 
         GeneralParameter parameter = new GeneralParameter(
+                0,
                 etParameterName_add.getText().toString(),
-                Double.parseDouble(etParameterValue_add.getText().toString())
+                Double.parseDouble(etParameterValue_add.getText().toString()),
+                getSpinnerSelectedCategory()
         );
 
         new Thread(() -> {
@@ -163,8 +229,10 @@ public class SetParametersActivity extends AppCompatActivity {
     private void updateParameter() {
 
         GeneralParameter parameter = new GeneralParameter(
+                0,
                 etParameterName_update.getText().toString(),
-                Double.parseDouble(etParameterValue_update.getText().toString())
+                Double.parseDouble(etParameterValue_update.getText().toString()),
+                GeneralParameter.Category.GENERAL //TODO: Şimdilik varsayılan değer
         );
 
         new Thread(() -> {
@@ -229,7 +297,11 @@ public class SetParametersActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        recyclerView = findViewById(R.id.activity_set_parameters_recycler_view);
+        rvGeneralParameters = findViewById(R.id.activity_set_parameters_recyclerview_general_parameters);
+        rvTimeBalance = findViewById(R.id.activity_set_parameters_recyclerview_time_balance);
+        rvFluxesAndOtherAdditions = findViewById(R.id.activity_set_parameters_recyclerview_fluxes_and_other_additions);
+        rvMeltInTraceElements = findViewById(R.id.activity_set_parameters_recyclerview_melt_int_trace_elements);
+
         fab = findViewById(R.id.activity_set_parameters_fab);
         actionBar = findViewById(R.id.activity_set_parameters_action_bar);
         progressBar = findViewById(R.id.activity_set_parameters_progress_bar);
@@ -237,6 +309,7 @@ public class SetParametersActivity extends AppCompatActivity {
         addParameterDialogPane = LayoutInflater.from(this).inflate(R.layout.dialog_add_parameter, null); // fixme: find warning cause
         etParameterName_add = addParameterDialogPane.findViewById(R.id.dialog_add_parameter_et_parameter_name);
         etParameterValue_add = addParameterDialogPane.findViewById(R.id.dialog_add_parameter_et_parameter_value);
+        initSpinner();
 
         updateParameterPane = LayoutInflater.from(this).inflate(R.layout.dialog_add_parameter, null);// fixme: find warning cause
         etParameterName_update = updateParameterPane.findViewById(R.id.dialog_add_parameter_et_parameter_name);
@@ -244,6 +317,41 @@ public class SetParametersActivity extends AppCompatActivity {
         etParameterName_update.setEnabled(false);
 
         initDialog();
+    }
+
+    private void initSpinner() {
+        spinnerCategory = addParameterDialogPane.findViewById(R.id.dialog_add_parameter_spinner_category);
+        String[] categories = new String[] {
+                GeneralParameter.Category.GENERAL.name(),
+                GeneralParameter.Category.TIME_BALANCE.name(),
+                GeneralParameter.Category.FLUXES_AND_OTHER_ADDITIONS.name(),
+                GeneralParameter.Category.MELT_IN_TRACE_ELEMENTS.name()
+        };
+        SpinnerAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        spinnerCategory.setAdapter(adapter);
+    }
+
+    private GeneralParameter.Category getSpinnerSelectedCategory() {
+
+        int position = spinnerCategory.getSelectedItemPosition();
+
+        switch (position) {
+
+            case 0:
+                return GeneralParameter.Category.GENERAL;
+
+            case 1:
+                return GeneralParameter.Category.TIME_BALANCE;
+
+            case 2:
+                return GeneralParameter.Category.FLUXES_AND_OTHER_ADDITIONS;
+
+            case 3:
+                return GeneralParameter.Category.MELT_IN_TRACE_ELEMENTS;
+
+            default:
+                throw new RuntimeException("Hatalı kategori seçimi");
+        }
     }
 
     private void initDialog() {
